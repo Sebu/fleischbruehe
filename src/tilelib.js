@@ -5,7 +5,7 @@
         physic: function ( x ) { return 10 }
     }
     var wall = {
-        images: [ "tile_wall", ],
+        images: [ "tile_wall0", "tile_wall1" ],
         physic: function ( x ) { return -1 }
     }
     var hole = {
