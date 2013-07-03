@@ -22,6 +22,8 @@ Player.prototype.constructor = Player;
 Player.prototype.sprite = null;
 
 Player.prototype.speedX = PLAYER_SPEED_X;
+Player.prototype.x_ = 0;
+Player.prototype.y_ = 0;
 
 
 Player.prototype.initialize = function(x, y) 
@@ -87,7 +89,7 @@ Player.prototype.update = function(level)
 {
 	var newX = this.newPosX();
 
-	if (  level.canPlayerMoveTo(newX, this.y_) ) 
+	if (  level.canPlayerMoveTo(newX, this.y_) & (Enter.LEFT | Enter.RIGHT ) ) 
 	{
 		this.setPos(newX, this.y_);
 	} 

@@ -7,6 +7,12 @@ var Tile = function(img) {
     this.initialize(img);
 };
 
+var Enter  = {
+    LEFT : 1,
+    RIGHT : 2,
+    TOP : 4,
+    BOTTOM : 8
+};
 
 Tile.prototype = new createjs.Bitmap();
 Tile.prototype.constructor = Tile;
@@ -78,6 +84,9 @@ LayerChunk.prototype.initialize = function () {
     this.cache( 0, 0, TILE_WIDTH * this.tileString.length, TILE_HEIGHT );
 };
 
+
+
+
 Layer.prototype.canPlayerMoveTo = function(x,y)
 {
     var chunk = Math.floor((x-this.x) / (5*TILE_WIDTH));
@@ -85,8 +94,7 @@ Layer.prototype.canPlayerMoveTo = function(x,y)
     var block = Math.floor((x - (5*TILE_WIDTH)*chunk  - this.x) / TILE_WIDTH); 
     // var block = Math.floor((x) / TILE_WIDTH) % 5;
 
-    console.log(block, chunk);
-    return (TILELIB[this.chunks[chunk+1].tileString.charAt( block ) ].physic() > 0);
+    return TILELIB[this.chunks[chunk+1].tileString.charAt( block ) ].canEnter;
 };
 
 var Level = function()
@@ -106,7 +114,7 @@ Level.prototype.initialize = function()
 {
     for(var i = 0; i < 6; ++i)
     {
-        var layer = new Layer("W__W______WWWWW");
+        var layer = new Layer("W__W____ _WWWWW");
         layer.y = TILE_HEIGHT*i;
         this.addChild( layer );
         this.layers_[i] = layer;
@@ -116,13 +124,18 @@ Level.prototype.initialize = function()
 Level.prototype.moveLayer = function(layerNo, offset)
 {
         this.layers_[layerNo].moveByOffset( offset );
-        player.translate(offset, 0);
+
+        if(layerNo == 2)
+
+            player.translate(offset, 0);
 
 };
 
 Level.prototype.translateWorld = function(x, y)
 {
-        this.y += y;
+    console.log( player.x_ , player.y_  );
+        if(this.canPlayerMoveTo(player.x_ , player.y_ - TILE_HEIGHT) & Enter.BOTTOM  )
+            this.y += y;
 };
 
 Level.prototype.getLayerForPoint = function ( x, y )
