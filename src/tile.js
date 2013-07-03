@@ -35,6 +35,33 @@ Layer.prototype.moveByOffset = function(offset)
     this.x += offset;
 };
 
+var LayerChunk = function () {
+    this.initialize();
+}
+
+LayerChunk.prototype = new createjs.Shape();
+LayerChunk.prototype.constructor = LayerChunk;
+
+LayerChunk.prototype.initialize = function () {
+    var queue = new createjs.LoadQueue();
+    queue.addEventListener( "complete", handleComplete );
+    queue.loadManifest( [
+        { id: "testtile", src: "res/star.png" }
+    ] );
+    var g = this.graphics;
+    function handleComplete() {
+        var image = queue.getResult( "testtile" );
+        var block = new Tile( image );
+        for ( var i = 0; i < 10; ++i ) {
+            g.beginBitmapFill( block.image );
+            g.drawRect( TILE_WIDTH * i, 0, 128, 192 );
+        }
+    }
+};
+
+LayerChunk.prototype.moveByOffset = function ( offset ) {
+    this.x += offset;
+};
 
 var Level = function()
 {
@@ -53,7 +80,7 @@ Level.prototype.initialize = function()
 {
     for(var i = 0; i < 10; ++i)
     {
-        var layer  = new Layer();
+        var layer = new LayerChunk();
         layer.y = TILE_HEIGHT*i;
         this.addChild( layer );
         this.layers_[i] = layer;

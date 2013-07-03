@@ -24,7 +24,6 @@ function startMainLoop() {
 
     var level = new Level();
 
-
     stage.addChild( level );
 
     var inputManager = new InputManager();
