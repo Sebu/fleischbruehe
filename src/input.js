@@ -1,13 +1,9 @@
-﻿var FakeLevel = {
-    getLayerForPoint: function ( x, y ) { return Math.floor( y / 960 * 5 ) },
-    moveLayer: function ( layer, offset ) { console.info( "moveLayer: " + layer + "/" + offset ) }
-};
+﻿
 
 function InputManager() {
     this.stage = null;
     this.level = null;
     this.activeTouches = {};
-    this.fakeLevel = FakeLevel;
 }
 
 InputManager.prototype.init = function ( stage, level ) {
@@ -22,7 +18,7 @@ InputManager.prototype.init = function ( stage, level ) {
 
 InputManager.prototype.handleTouchStart = function ( event ) {
     this.activeTouches[ event.pointerID ] = {
-        layer: this.fakeLevel.getLayerForPoint( event.stageX, event.stageY ),
+        layer: this.level.getLayerForPoint( event.stageX, event.stageY ),
         stageX: event.stageX,
         stageY: event.stageY
     }
@@ -31,7 +27,8 @@ InputManager.prototype.handleTouchStart = function ( event ) {
 InputManager.prototype.handleTouchMove = function ( event ) {
     var touch = this.activeTouches[ event.pointerID ];
     if ( touch ) {
-        this.fakeLevel.moveLayer( touch.layer, touch.stageX - event.stageX );
+        this.level.moveLayer( touch.layer, event.stageX - touch.stageX );
+        this.level.translateWorld( 0 , event.stageX - touch.stageY );
         touch.stageX = event.stageX;
         touch.stageY = event.stageY;
     }

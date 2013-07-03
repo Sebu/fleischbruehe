@@ -1,21 +1,39 @@
-﻿function startMainLoop() {
+﻿var PATTERN_LIST = [
+    [
+        "__________",
+        "W__v__WWWW",
+        "__________",
+        "___^______",
+        "_ _____H__",
+        "_J________",
+    ],
+    [
+        "__________",
+        "W__v__WWWW",
+        "__________"
+    ],
+];
+
+
+function startMainLoop() {
     var stage = new createjs.Stage( "canvas" );
 
     createjs.Ticker.addEventListener( "tick", update );
     createjs.Ticker.useRAF = true;
-    createjs.Ticker.setFPS( 60 );
+    createjs.Ticker.setFPS( 30 );
 
-    // REMOVE ME: Test graphic
-    var circle = new createjs.Shape();
-    circle.graphics.beginFill( "red" ).drawCircle( 0, 0, 50 );
-    circle.x = 100;
-    circle.y = 100;
-    stage.addChild( circle );
+    var level = new Level();
+
+
+    stage.addChild( level );
 
     var inputManager = new InputManager();
-    inputManager.init( stage, {} );
+    inputManager.init( stage, level );
 
     function update() {
+
         stage.update();
     }
 }
+
+
