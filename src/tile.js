@@ -23,7 +23,7 @@ Layer.prototype.constructor = Layer;
 Layer.prototype.initialize = function() {
     for(var i = 0; i < 10; ++i)
     {
-        var block  = new Tile('res/star.png');
+        var block  = new Tile('res/block.png');
         block.x = TILE_WIDTH*i;
         this.addChild( block );
     }
@@ -72,7 +72,7 @@ Level.prototype.translateWorld = function(x, y)
 
 Level.prototype.getLayerForPoint = function ( x, y )
 {
-    var layerNum = Math.round((y - this.y) / 192);
+    var layerNum = Math.round((y - this.y) / TILE_HEIGHT);
     return layerNum;
 };
  

@@ -24,14 +24,16 @@ function startMainLoop() {
 
     var level = new Level();
 
+    var player = new Player(WORLD_CENTER.x, WORLD_CENTER.y);
 
+    stage.addChild( player.sprite );
     stage.addChild( level );
 
     var inputManager = new InputManager();
     inputManager.init( stage, level );
 
     function update() {
-
+        player.update(levelMock);
         stage.update();
     }
 }
