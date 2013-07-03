@@ -7,8 +7,8 @@ var Tile = function(img) {
 
 Tile.prototype = new createjs.Bitmap();
 Tile.prototype.constructor = Tile;
-Tile.prototype.width = 20;
-Tile.prototype.height = 20;
+Tile.prototype.width = 128;
+Tile.prototype.height = 192;
 
 
 var Layer = function() {
@@ -17,12 +17,12 @@ var Layer = function() {
 
 Layer.prototype = new createjs.Container();
 Layer.prototype.constructor = Layer;
-Layer.prototype.height = 20;
+Layer.prototype.height = 192;
 
 Layer.prototype.initialize = function() {
     for(var i = 0; i < 10; ++i)
     {
-        var block  = new Tile('res/lila.jpg');
+        var block  = new Tile('res/star.png');
         block.x = block.width*i;
         this.addChild( block );
     }
@@ -50,17 +50,24 @@ Level.prototype.initialize = function()
 {
     for(var i = 0; i < 10; ++i)
     {
-        var layer  = new Layer('res/lila.jpg');
+        var layer  = new Layer();
         layer.y = layer.height*i;
         this.addChild( layer );
         this.layers_[i] = layer;
     }
 };
 
-Level.prototype.moveLayerByOffset = function(layerNo, offset)
+Level.prototype.moveLayer = function(layerNo, offset)
 {
     this.layers_[layerNo].moveByOffset( offset );
 };
+
+
+Level.prototype.getLayerForPoint = function ( x, y )
+{
+    var layerNum = Math.round((y - this.y) / 192);
+    return layerNum;
+}
 //
 //    moveLayerByOffset : function(offsetX)
 //    {

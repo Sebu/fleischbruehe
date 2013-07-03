@@ -6,6 +6,7 @@
     <title>easel.js test</title>
     <script src="http://code.createjs.com/createjs-2013.05.14.min.js"></script>
     <script src="src/tile.js"></script>
+    <script src="src/input.js"></script>
     <script src="src/main.js"></script>
 
     <script>
@@ -14,8 +15,19 @@
         }
     </script>
 </head>
-<body onload="init();">
-    <canvas id="canvas" width="500" height="300">
+<body
+    onload="init();"
+    style="
+        margin: 0px;
+        padding: 0px;
+        background-color: black;
+        "
+    >
+    <canvas
+        id="canvas"
+        width="640"
+        height="920"
+        >
         Your browser does not support HTML5 canvas.
     </canvas>
 </body>
