@@ -63,7 +63,7 @@ GameWorld.prototype.init = function()
 
     stage.addChild( level );
 
-    var player = this.player = new Player(WORLD_CENTER.x, WORLD_CENTER.y);
+    player = this.player = new Player(WORLD_CENTER.x, WORLD_CENTER.y);
  
     stage.addChild( player.sprite );
 
@@ -87,9 +87,6 @@ GameWorld.prototype.getLayerForPoint = function( x, y)
 
 GameWorld.prototype.handleInput = function(layer, x, y)
 {
-        if(layer==2)
-            this.player.translate(x, 0);
-    
         if(Math.abs(x) > Math.abs(y*2))
             this.level.moveLayer( layer, x );
         else

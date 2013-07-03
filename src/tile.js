@@ -80,8 +80,13 @@ LayerChunk.prototype.initialize = function () {
 
 Layer.prototype.canPlayerMoveTo = function(x,y)
 {
-    var block = Math.floor((x - this.x) / TILE_WIDTH) % 15;
-    return (TILELIB[this.tileString.charAt( block ) ].physic() > 0);
+    var chunk = Math.floor((x-this.x) / (5*TILE_WIDTH));
+
+    var block = Math.floor((x - (5*TILE_WIDTH)*chunk  - this.x) / TILE_WIDTH); 
+    // var block = Math.floor((x) / TILE_WIDTH) % 5;
+
+    console.log(block, chunk);
+    return (TILELIB[this.chunks[chunk+1].tileString.charAt( block ) ].physic() > 0);
 };
 
 var Level = function()
@@ -111,6 +116,8 @@ Level.prototype.initialize = function()
 Level.prototype.moveLayer = function(layerNo, offset)
 {
         this.layers_[layerNo].moveByOffset( offset );
+        player.translate(offset, 0);
+
 };
 
 Level.prototype.translateWorld = function(x, y)
