@@ -78,7 +78,7 @@ LayerChunk.prototype.initialize = function () {
     this.cache( 0, 0, TILE_WIDTH * this.tileString.length, TILE_HEIGHT );
 };
 
-LayerChunk.prototype.canPlayerMoveTo = function(x,y)
+Layer.prototype.canPlayerMoveTo = function(x,y)
 {
     var block = Math.floor((x - this.x) / TILE_WIDTH) % 15;
     return (TILELIB[this.tileString.charAt( block ) ].physic() > 0);
@@ -115,7 +115,7 @@ Level.prototype.moveLayer = function(layerNo, offset)
 
 Level.prototype.translateWorld = function(x, y)
 {
-        this.y = (this.y + y) % TILE_HEIGHT;
+        this.y += y;
 };
 
 Level.prototype.getLayerForPoint = function ( x, y )
