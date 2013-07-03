@@ -89,9 +89,11 @@ GameWorld.prototype.handleInput = function(layer, x, y)
 {
         if(layer==2)
             this.player.translate(x, 0);
-
-        this.level.moveLayer( layer, x );
-        this.level.translateWorld( 0 , y );
+    
+        if(Math.abs(x) > Math.abs(y*2))
+            this.level.moveLayer( layer, x );
+        else
+            this.level.translateWorld( x , y );
 }
 
 

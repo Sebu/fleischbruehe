@@ -48,7 +48,7 @@ Player.prototype.setPos = function (x, y)
 }
 
 
-Player.prototype.newX = function()
+Player.prototype.newPosX = function()
 {
 	var diffX = WORLD_CENTER.x - this.x_; 
 	this.speed_ = Math.min( Math.abs(diffX), Player.MAX_SPEED );
@@ -85,7 +85,7 @@ Player.prototype.updateState = function()
 
 Player.prototype.update = function(level) 
 {
-	var newX = this.newX();
+	var newX = this.newPosX();
 
 	if (  level.canPlayerMoveTo(newX, this.y_) ) 
 	{

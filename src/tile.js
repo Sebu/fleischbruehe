@@ -68,7 +68,6 @@ LayerChunk.prototype.moveByOffset = function ( offset ) {
 LayerChunk.prototype.canPlayerMoveTo = function(x,y)
 {
     var block = Math.floor((x - this.x) / TILE_WIDTH) % 15;
-    console.log(block);
     return (TILELIB[this.tileString.charAt( block ) ].physic() > 0);
 };
 
@@ -99,12 +98,12 @@ Level.prototype.initialize = function()
 
 Level.prototype.moveLayer = function(layerNo, offset)
 {
-    this.layers_[layerNo].moveByOffset( offset );
+        this.layers_[layerNo].moveByOffset( offset );
 };
 
 Level.prototype.translateWorld = function(x, y)
 {
-   // this.y = (this.y + y) % TILE_HEIGHT;
+        this.y = (this.y + y) % TILE_HEIGHT;
 };
 
 Level.prototype.getLayerForPoint = function ( x, y )
@@ -114,7 +113,6 @@ Level.prototype.getLayerForPoint = function ( x, y )
 };
 
  
-
 Level.prototype.canPlayerMoveTo = function(x,y) 
 {
     var layerNo = this.getLayerForPoint(x, y) ;
