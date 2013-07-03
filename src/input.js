@@ -6,9 +6,9 @@ function InputManager() {
     this.activeTouches = {};
 }
 
-InputManager.prototype.init = function ( stage, level ) {
+InputManager.prototype.init = function ( stage, world ) {
     this.stage = stage;
-    this.level = level;
+    this.world = world;
 
     this.stage.addEventListener( "stagemousedown", this.handleTouchStart.bind( this ) );
     this.stage.addEventListener( "stagemousemove", this.handleTouchMove.bind( this ) );
@@ -27,8 +27,9 @@ InputManager.prototype.handleTouchStart = function ( event ) {
 InputManager.prototype.handleTouchMove = function ( event ) {
     var touch = this.activeTouches[ event.pointerID ];
     if ( touch ) {
+        this.world.handleInput(touch.layer, event.stageX - touch.stageX, event.stageY - touch.stageY);
         this.level.moveLayer( touch.layer, event.stageX - touch.stageX );
-        this.level.translateWorld( 0 , event.stageX - touch.stageY );
+        this.level.translateWorld( 0 , event.stageY - touch.stageY );
         touch.stageX = event.stageX;
         touch.stageY = event.stageY;
     }

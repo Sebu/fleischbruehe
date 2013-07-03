@@ -1,7 +1,7 @@
 
 
-var TILE_WIDTH = 128;
-var TILE_HEIGHT = 192;
+var TILE_WIDTH = 64;
+var TILE_HEIGHT = 64;
 
 var Tile = function(img) {
     this.initialize(img);
@@ -35,6 +35,35 @@ Layer.prototype.moveByOffset = function(offset)
     this.x += offset;
 };
 
+var LayerChunk = function () {
+    this.initialize();
+}
+
+LayerChunk.prototype = new createjs.Shape();
+LayerChunk.prototype.constructor = LayerChunk;
+
+LayerChunk.prototype.initialize = function () {
+    var queue = new createjs.LoadQueue();
+    queue.addEventListener( "complete", handleComplete );
+    queue.loadManifest( [
+        { id: "testtile", src: "res/block.png" }
+    ] );
+    var g = this.graphics;
+    var _this = this;
+    function handleComplete() {
+        var image = queue.getResult( "testtile" );
+        var block = new Tile( image );
+        g.beginBitmapFill( block.image );
+        for ( var i = 0; i < 10; ++i ) {
+            g.drawRect( TILE_WIDTH * i, 0, TILE_WIDTH, TILE_HEIGHT );
+        }
+        _this.cache( 0, 0, TILE_WIDTH * 10, TILE_HEIGHT );
+    }
+};
+
+LayerChunk.prototype.moveByOffset = function ( offset ) {
+    this.x += offset;
+};
 
 var Level = function()
 {
@@ -53,7 +82,7 @@ Level.prototype.initialize = function()
 {
     for(var i = 0; i < 10; ++i)
     {
-        var layer  = new Layer();
+        var layer = new LayerChunk();
         layer.y = TILE_HEIGHT*i;
         this.addChild( layer );
         this.layers_[i] = layer;
