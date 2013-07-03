@@ -5,12 +5,10 @@
     createjs.Ticker.useRAF = true;
     createjs.Ticker.setFPS( 60 );
 
-    // REMOVE ME: Test graphic
-    var circle = new createjs.Shape();
-    circle.graphics.beginFill( "red" ).drawCircle( 0, 0, 50 );
-    circle.x = 100;
-    circle.y = 100;
-    stage.addChild( circle );
+    var level = new Level();
+
+
+    stage.addChild( level );
 
     // REMOVE ME: Touch controls
     createjs.Touch.enable( stage );
@@ -19,14 +17,16 @@
     stage.addEventListener( "stagemouseup", touchEnd );
 
     function update() {
+
         stage.update();
     }
 
     function touchStart( evt ) {
-        createjs.Tween.get( circle, { override : true } ).to( { scaleX: 2 }, 200 );
+        level.moveLayerByOffset(0, 10);
+    //        reatejs.Tween.get( circle, { override : true } ).to( { scaleX: 2 }, 200 );
     }
 
     function touchEnd( evt ) {
-        createjs.Tween.get( circle, { override: true } ).to( { scaleX: 1 }, 200 );
+//        createjs.Tween.get( circle, { override: true } ).to( { scaleX: 1 }, 200 );
     }
 }
