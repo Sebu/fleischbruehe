@@ -1,7 +1,7 @@
 
 
-var TILE_WIDTH = 128;
-var TILE_HEIGHT = 192;
+var TILE_WIDTH = 64;
+var TILE_HEIGHT = 64;
 
 var Tile = function(img) {
     this.initialize(img);
@@ -53,8 +53,8 @@ LayerChunk.prototype.initialize = function () {
     function handleComplete() {
         var image = queue.getResult( "testtile" );
         var block = new Tile( image );
+        g.beginBitmapFill( block.image );
         for ( var i = 0; i < 10; ++i ) {
-            g.beginBitmapFill( block.image );
             g.drawRect( TILE_WIDTH * i, 0, TILE_WIDTH, TILE_HEIGHT );
         }
         _this.cache( 0, 0, TILE_WIDTH * 10, TILE_HEIGHT );
