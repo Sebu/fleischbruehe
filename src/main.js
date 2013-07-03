@@ -37,24 +37,61 @@ function preloadAssetsAndStart() {
     ] );
 }
 
-function startMainLoop() {
 
-    var stage = new createjs.Stage( "canvas" );
+function startMainLoop() {
+    var world = new GameWorld();
+}
+
+var GameWorld  = function()
+{
+    this.init();
+}
+
+
+
+GameWorld.prototype.contructor = GameWorld;
+
+GameWorld.prototype.init = function() 
+{
+    var stage = this.stage = new createjs.Stage( "canvas" );
 
     createjs.Ticker.addEventListener( "tick", update );
     createjs.Ticker.useRAF = true;
     createjs.Ticker.setFPS( 30 );
 
-    var level = new Level();
+    var level = this.level = new Level();
 
     stage.addChild( level );
 
+    var player = this.player = new Player(WORLD_CENTER.x, WORLD_CENTER.y);
+ 
+    stage.addChild( player.sprite );
+
+
+
     var inputManager = new InputManager();
-    inputManager.init( stage, level );
+    inputManager.init( stage, this );
 
     function update() {
+        player.update(level);
         stage.update();
     }
+}
+
+
+GameWorld.prototype.getLayerForPoint = function( x, y) 
+{
+    return this.level.getLayerForPoint(x, y);
+}
+
+
+GameWorld.prototype.handleInput = function(layer, x, y)
+{
+        if(layer==2)
+            this.player.translate(x, 0);
+
+        this.level.moveLayer( layer, x );
+        this.level.translateWorld( 0 , y );
 }
 
 

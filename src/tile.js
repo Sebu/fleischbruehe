@@ -78,6 +78,13 @@ LayerChunk.prototype.initialize = function () {
     this.cache( 0, 0, TILE_WIDTH * this.tileString.length, TILE_HEIGHT );
 };
 
+LayerChunk.prototype.canPlayerMoveTo = function(x,y)
+{
+    var block = Math.floor((x - this.x) / TILE_WIDTH) % 15;
+    console.log(block);
+    return (TILELIB[this.tileString.charAt( block ) ].physic() > 0);
+};
+
 var Level = function()
 {
     this.initialize();
@@ -88,7 +95,7 @@ Level.prototype =  new createjs.Container();
 Level.prototype.constructor = Level;
 
 Level.prototype.layers_ = [];
-Level.prototype.layerIndex_ = 0;
+Level.prototype.layerIndex  = 0;
 Level.prototype.maxVisibleLayers = 5;
 
 Level.prototype.initialize = function()
@@ -109,14 +116,24 @@ Level.prototype.moveLayer = function(layerNo, offset)
 
 Level.prototype.translateWorld = function(x, y)
 {
-    //this.y = y % TILE_WIDTH;
+   // this.y = (this.y + y) % TILE_HEIGHT;
 };
 
 Level.prototype.getLayerForPoint = function ( x, y )
 {
-    var layerNum = Math.round((y - this.y) / TILE_HEIGHT);
+    var layerNum = Math.floor((y - this.y) / TILE_HEIGHT);
     return layerNum;
 };
+
  
+
+Level.prototype.canPlayerMoveTo = function(x,y) 
+{
+    var layerNo = this.getLayerForPoint(x, y) ;
+
+    return this.layers_[layerNo].canPlayerMoveTo(x, y);
+};
+
+
 
 
