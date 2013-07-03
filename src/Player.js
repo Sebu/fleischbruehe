@@ -20,7 +20,7 @@ Player.STATES = {
 	DOWN : 3
 };
 
-Player.MAX_SPEED = 6;
+Player.MAX_SPEED = 12;
 
 // Player.prototype =  new createjs.Bitmap();
 Player.prototype.constructor = Player;

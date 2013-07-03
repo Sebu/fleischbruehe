@@ -21,6 +21,19 @@ function preloadAssetsAndStart() {
         { id: "testtile", src: "res/star.png" },
         { id: "tile_floor", src: "res/tile_floor.png" },
         { id: "tile_wall", src: "res/tile_wall.png" },
+
+        { id: "tile_bg0", src: "res/bgtile1.png" },
+        { id: "tile_bg1", src: "res/bgtile2.png" },
+        { id: "tile_bg2", src: "res/bgtile3.png" },
+        { id: "tile_bg3", src: "res/bgtile4.png" },
+        { id: "tile_bg4", src: "res/bgtile5.png" },
+
+        { id: "tile_floor0", src: "res/floortile1.png" },
+        { id: "tile_floor1", src: "res/floortile2.png" },
+        { id: "tile_floor2", src: "res/floortile3.png" },
+        { id: "tile_floor3", src: "res/floortile4.png" },
+
+        { id: "tile_hole", src: "res/holetile.png" },
     ] );
 }
 
@@ -74,7 +87,9 @@ GameWorld.prototype.getLayerForPoint = function( x, y)
 
 GameWorld.prototype.handleInput = function(layer, x, y)
 {
-        this.player.translate(x, 0);
+        if(layer==2)
+            this.player.translate(x, 0);
+
         this.level.moveLayer( layer, x );
         this.level.translateWorld( 0 , y );
 }
