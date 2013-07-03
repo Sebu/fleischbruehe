@@ -67,7 +67,7 @@ Level.prototype.moveLayer = function(layerNo, offset)
 
 Level.prototype.translateWorld = function(x, y)
 {
-    this.y = y % TILE_WIDTH;
+    // this.y = y % TILE_WIDTH;
 };
 
 Level.prototype.getLayerForPoint = function ( x, y )
