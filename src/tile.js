@@ -1,7 +1,7 @@
 
 
 var TILE_WIDTH = 128;
-var TILE_HEIGHT = 196;
+var TILE_HEIGHT = 192;
 
 var Tile = function(img) {
     this.initialize(img);
@@ -22,8 +22,13 @@ Layer.prototype = new createjs.Container();
 Layer.prototype.constructor = Layer;
 
 Layer.prototype.initialize = function() {
-
-
+    this.chunks.push( new LayerChunk( this.tileString.substring( 0, 5 ) ) );
+    this.chunks.push( new LayerChunk( this.tileString.substring( 5, 5 ) ) );
+    this.chunks.push( new LayerChunk( this.tileString.substring( 10, 5 ) ) );
+    for ( var i = 0; i < this.chunks.length; i++ ) {
+        this.addChild( this.chunks[i] );
+        this.chunks[i].x = i * 5 * TILE_WIDTH;
+    }
 };
 
 
@@ -43,10 +48,13 @@ LayerChunk.prototype.constructor = LayerChunk;
 LayerChunk.prototype.initialize = function () {
     this.graphics.c();
     for ( var i = 0; i < this.tileString.length; i++ ) {
-        var image = assetLoader.getResult( TILELIB[this.tileString.charAt( i ) ].image );
-        var block = new Tile( image );
+        var images = TILELIB[this.tileString.charAt( i ) ].images;
+        var image = assetLoader.getResult( images[ Math.floor( Math.random() * images.length ) ] );
+        var bgimage = assetLoader.getResult( "tile_bg" + Math.floor( Math.random() * 5 ) );
         this.graphics
-            .bf( block.image )
+            .bf( new Tile( bgimage ).image )
+            .drawRect( TILE_WIDTH * i, 0, TILE_WIDTH, TILE_HEIGHT )
+            .bf( new Tile( image ).image )
             .drawRect( TILE_WIDTH * i, 0, TILE_WIDTH, TILE_HEIGHT );
     }
     this.cache( 0, 0, TILE_WIDTH * this.tileString.length, TILE_HEIGHT );
@@ -73,7 +81,7 @@ Level.prototype.initialize = function()
 {
     for(var i = 0; i < 6; ++i)
     {
-        var layer = new LayerChunk("W__W_");
+        var layer = new LayerChunk("W__W______WWWWW");
         layer.y = TILE_HEIGHT*i;
         this.addChild( layer );
         this.layers_[i] = layer;
