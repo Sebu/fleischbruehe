@@ -20,7 +20,7 @@ Player.STATES = {
 	DOWN : 3
 };
 
-Player.MAX_SPEED = 3;
+Player.MAX_SPEED = 6;
 
 // Player.prototype =  new createjs.Bitmap();
 Player.prototype.constructor = Player;
@@ -37,9 +37,15 @@ Player.prototype.initialize = function(x, y)
 	this.x_ =  x + 100;
 	this.y_ =  y;
 	this.sprite = new createjs.Bitmap('res/wendy.png');
+
 }
 
-Player.prototype.translate = function (x, y)
+Player.prototype.translate = function(x, y)
+{
+	this.setPos(this.x_+x, this.y_+y);
+}
+
+Player.prototype.setPos = function (x, y)
 {
 	this.x_ = x;
 	this.y_ = y;
@@ -70,12 +76,12 @@ Player.prototype.updateState = function()
 	if(this.speed_>0)
 	{
 		this.state = Player.RIGHT;
-		this.sprite.scaleX = 1;
+		this.sprite.scaleX = -1;
 	}
 	else  if (this.speed_<0)
 	{
 		this.state = Player.LEFT;
-		this.sprite.scaleX = -1;
+		this.sprite.scaleX = 1;
 	}
 	else
 	{
@@ -89,6 +95,6 @@ Player.prototype.update = function(level)
 
 	if (  level.canPlayerMoveTo(newX, this.y_) ) 
 	{
-		this.translate(newX, this.y_);
+		this.setPos(newX, this.y_);
 	} 
 }

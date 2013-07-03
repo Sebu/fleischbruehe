@@ -18,7 +18,7 @@ InputManager.prototype.init = function ( stage, world ) {
 
 InputManager.prototype.handleTouchStart = function ( event ) {
     this.activeTouches[ event.pointerID ] = {
-        layer: this.level.getLayerForPoint( event.stageX, event.stageY ),
+        layer: this.world.getLayerForPoint( event.stageX, event.stageY ),
         stageX: event.stageX,
         stageY: event.stageY
     }
@@ -28,8 +28,6 @@ InputManager.prototype.handleTouchMove = function ( event ) {
     var touch = this.activeTouches[ event.pointerID ];
     if ( touch ) {
         this.world.handleInput(touch.layer, event.stageX - touch.stageX, event.stageY - touch.stageY);
-        this.level.moveLayer( touch.layer, event.stageX - touch.stageX );
-        this.level.translateWorld( 0 , event.stageY - touch.stageY );
         touch.stageX = event.stageX;
         touch.stageY = event.stageY;
     }
