@@ -49,13 +49,15 @@ LayerChunk.prototype.initialize = function () {
         { id: "testtile", src: "res/star.png" }
     ] );
     var g = this.graphics;
+    var _this = this;
     function handleComplete() {
         var image = queue.getResult( "testtile" );
         var block = new Tile( image );
         for ( var i = 0; i < 10; ++i ) {
             g.beginBitmapFill( block.image );
-            g.drawRect( TILE_WIDTH * i, 0, 128, 192 );
+            g.drawRect( TILE_WIDTH * i, 0, TILE_WIDTH, TILE_HEIGHT );
         }
+        _this.cache( 0, 0, TILE_WIDTH * 10, TILE_HEIGHT );
     }
 };
 
