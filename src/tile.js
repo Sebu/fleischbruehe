@@ -95,12 +95,12 @@ Level.prototype.moveLayer = function(layerNo, offset)
 
 Level.prototype.translateWorld = function(x, y)
 {
-    this.y = (this.y + y) % TILE_HEIGHT;
+    // this.y = (this.y + y) % TILE_HEIGHT;
 };
 
 Level.prototype.getLayerForPoint = function ( x, y )
 {
-    var layerNum = Math.round((y - this.y) / TILE_HEIGHT);
+    var layerNum = Math.floor((y - this.y) / TILE_HEIGHT);
     return layerNum;
 };
  
