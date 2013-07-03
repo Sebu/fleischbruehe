@@ -28,6 +28,7 @@ InputManager.prototype.handleTouchMove = function ( event ) {
     var touch = this.activeTouches[ event.pointerID ];
     if ( touch ) {
         this.level.moveLayer( touch.layer, event.stageX - touch.stageX );
+        this.level.translateWorld( 0 , event.stageX - touch.stageY );
         touch.stageX = event.stageX;
         touch.stageY = event.stageY;
     }
