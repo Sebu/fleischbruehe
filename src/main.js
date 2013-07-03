@@ -73,7 +73,7 @@ GameWorld.prototype.init = function()
     inputManager.init( stage, this );
 
     function update() {
-        player.update(levelMock);
+        player.update(level);
         stage.update();
     }
 }

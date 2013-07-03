@@ -1,11 +1,5 @@
 
 
-
-var levelMock = {
-	canPlayerMoveTo : function(x,y) { return true; }
-}
-
-
 var PLAYER_SPEED_X = 3;
 var WORLD_CENTER = { x: 320 , y: 500 };
 var Player = function(x, y)
@@ -34,7 +28,7 @@ Player.prototype.initialize = function(x, y)
 {
 	this.state_  = Player.STATES.DOWN;
 	this.speed_ = 0;
-	this.x_ =  x + 100;
+	this.x_ =  x;
 	this.y_ =  y;
 	this.sprite = new createjs.Bitmap('res/wendy.png');
 
