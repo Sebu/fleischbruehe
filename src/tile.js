@@ -1,7 +1,7 @@
 
 
-var TILE_WIDTH = 64;
-var TILE_HEIGHT = 64;
+var TILE_WIDTH = 128;
+var TILE_HEIGHT = 196;
 
 var Tile = function(img) {
     this.initialize(img);
@@ -12,21 +12,18 @@ Tile.prototype = new createjs.Bitmap();
 Tile.prototype.constructor = Tile;
 
 
-var Layer = function() {
+var Layer = function( tileString ) {
+    this.chunks = [];
+    this.tileString = tileString;
     this.initialize();
-
 }
 
 Layer.prototype = new createjs.Container();
 Layer.prototype.constructor = Layer;
 
 Layer.prototype.initialize = function() {
-    for(var i = 0; i < 10; ++i)
-    {
-        var block  = new Tile('res/star.png');
-        block.x = TILE_WIDTH*i;
-        this.addChild( block );
-    }
+
+
 };
 
 
@@ -35,7 +32,8 @@ Layer.prototype.moveByOffset = function(offset)
     this.x += offset;
 };
 
-var LayerChunk = function () {
+var LayerChunk = function ( tileString ) {
+    this.tileString = tileString;
     this.initialize();
 }
 
@@ -43,22 +41,15 @@ LayerChunk.prototype = new createjs.Shape();
 LayerChunk.prototype.constructor = LayerChunk;
 
 LayerChunk.prototype.initialize = function () {
-    var queue = new createjs.LoadQueue();
-    queue.addEventListener( "complete", handleComplete );
-    queue.loadManifest( [
-        { id: "testtile", src: "res/star.png" }
-    ] );
-    var g = this.graphics;
-    var _this = this;
-    function handleComplete() {
-        var image = queue.getResult( "testtile" );
+    this.graphics.c();
+    for ( var i = 0; i < this.tileString.length; i++ ) {
+        var image = assetLoader.getResult( TILELIB[this.tileString.charAt( i ) ].image );
         var block = new Tile( image );
-        g.beginBitmapFill( block.image );
-        for ( var i = 0; i < 10; ++i ) {
-            g.drawRect( TILE_WIDTH * i, 0, TILE_WIDTH, TILE_HEIGHT );
-        }
-        _this.cache( 0, 0, TILE_WIDTH * 10, TILE_HEIGHT );
+        this.graphics
+            .bf( block.image )
+            .drawRect( TILE_WIDTH * i, 0, TILE_WIDTH, TILE_HEIGHT );
     }
+    this.cache( 0, 0, TILE_WIDTH * this.tileString.length, TILE_HEIGHT );
 };
 
 LayerChunk.prototype.moveByOffset = function ( offset ) {
@@ -80,9 +71,9 @@ Level.prototype.maxVisibleLayers = 5;
 
 Level.prototype.initialize = function()
 {
-    for(var i = 0; i < 10; ++i)
+    for(var i = 0; i < 6; ++i)
     {
-        var layer = new LayerChunk();
+        var layer = new LayerChunk("W__W_");
         layer.y = TILE_HEIGHT*i;
         this.addChild( layer );
         this.layers_[i] = layer;
@@ -101,7 +92,7 @@ Level.prototype.translateWorld = function(x, y)
 
 Level.prototype.getLayerForPoint = function ( x, y )
 {
-    var layerNum = Math.round((y - this.y) / 192);
+    var layerNum = Math.round((y - this.y) / TILE_HEIGHT);
     return layerNum;
 };
  
