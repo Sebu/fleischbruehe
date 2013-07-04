@@ -184,10 +184,16 @@ Level.prototype.moveLayer = function(layerNo, offset)
             player.translate(offset, 0);
 };
 
+
+Level.prototype.moveLayerStart = function()
+{
+    createjs.Tween.removeTweens(this);
+}
+
 Level.prototype.moveLayerEnded = function(layerNo, deltaX, deltaTime)
 {
 
-   createjs.Tween.removeTweens(this);
+  
    var lvl = this;
    var l = this.layers[layerNo];
 
@@ -199,16 +205,23 @@ Level.prototype.moveLayerEnded = function(layerNo, deltaX, deltaTime)
    this.twe = dir*speed*100;
 
    var that = this;
+
    this.scrollTween = createjs.Tween.get( this, {override:true})
             .to({twe: dir*6 }, 2000, createjs.Ease.quadOut)
+            .call(  onCompletooo )  
             .addEventListener("change", function handleChange(event) {
                 lvl.moveLayer(layerNo, that.twe);
                 })
-            .call( l.snapToGrid() );
+            ;
 
 
+    function onComplete()
+    {
+        l.snapToGrid();
+    }
 
 }
+
 
 
 
