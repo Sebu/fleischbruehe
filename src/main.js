@@ -107,10 +107,7 @@ GameWorld.prototype.getLayerForPoint = function( x, y)
 
 GameWorld.prototype.handleInput = function(layer, x, y)
 {
-        if(Math.abs(x) > Math.abs(y*4))
-            this.level.moveLayer( layer, x );
-        else 
-            this.level.translateWorld( x , y );
+    this.level.moveLayer( layer, x );
 }
 
 GameWorld.prototype.handleSwipeDown = function () {

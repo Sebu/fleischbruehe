@@ -158,16 +158,20 @@ Level.prototype.moveLayer = function(layerNo, offset)
 
 Level.prototype.moveLayerEnded = function(layerNo, deltaX, deltaTime)
 {
-    console.log(deltaX);
     var rest = deltaX % TILE_WIDTH;
+
+    console.log( rest, deltaX );
+
 
     if(rest > TILE_WIDTH/2)
         this.moveLayer(layerNo, TILE_WIDTH - rest);
+    else if(rest < -TILE_WIDTH/2)
+        this.moveLayer(layerNo, - TILE_WIDTH - rest);
     else
-        this.moveLayer(layerNo, -rest);
+        this.moveLayer(layerNo, - rest);
 }
 
-Level.prototype.translateWorld = function(x, y)
+Level.prototype.update = function()
 {
 
 };
