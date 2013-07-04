@@ -1,7 +1,7 @@
 
 
 var PLAYER_SPEED_X = 3;
-var WORLD_CENTER = { x: 320 , y: 500 };
+var WORLD_CENTER = { x: 320 , y: 420 };
 var Player = function(x, y)
 {
 	this.initialize(x, y);
@@ -33,6 +33,8 @@ Player.prototype.initialize = function(x, y)
 	this.x_ =  x;
 	this.y_ =  y;
 	this.sprite = new createjs.Bitmap('res/wendy.png');
+	this.sprite.scaleX = 2.5;
+	this.sprite.scaleY = 3;
 
 }
 
@@ -72,12 +74,12 @@ Player.prototype.updateState = function()
 	if(this.speed_>0)
 	{
 		this.state = Player.RIGHT;
-		this.sprite.scaleX = -1;
+		this.sprite.scaleX = -2.5;
 	}
 	else  if (this.speed_<0)
 	{
 		this.state = Player.LEFT;
-		this.sprite.scaleX = 1;
+		this.sprite.scaleX = 2.5;
 	}
 	else
 	{
