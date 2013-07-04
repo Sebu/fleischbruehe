@@ -167,7 +167,7 @@ Level.prototype.moveLayerEnded = function(layerNo, deltaX, deltaTime)
         this.moveLayer(layerNo, - rest);
 }
 
-Level.prototype.setup = function()
+Level.prototype.update = function()
 {
 
 };
