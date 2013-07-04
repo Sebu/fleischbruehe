@@ -1,7 +1,7 @@
 
 
 var PLAYER_SPEED_X = 3;
-var WORLD_CENTER = { x: 320 , y: 500 };
+var WORLD_CENTER = { x: 320 , y: 420 };
 var Player = function(x, y)
 {
 	this.initialize(x, y);
@@ -22,6 +22,8 @@ Player.prototype.constructor = Player;
 Player.prototype.sprite = null;
 
 Player.prototype.speedX = PLAYER_SPEED_X;
+Player.prototype.x_ = 0;
+Player.prototype.y_ = 0;
 
 
 Player.prototype.initialize = function(x, y) 
@@ -30,7 +32,10 @@ Player.prototype.initialize = function(x, y)
 	this.speed_ = 0;
 	this.x_ =  x;
 	this.y_ =  y;
+	this.score = 0;
 	this.sprite = new createjs.Bitmap('res/wendy.png');
+	this.sprite.scaleX = 2.5;
+	this.sprite.scaleY = 3;
 
 }
 
@@ -65,17 +70,23 @@ Player.prototype.newPosX = function()
 }
 
 
+Player.prototype.addScore = function(score)
+{
+	this.score += score;
+	labelScore.text = "Score:" + this.score;
+}
+
 Player.prototype.updateState = function()
 {
 	if(this.speed_>0)
 	{
 		this.state = Player.RIGHT;
-		this.sprite.scaleX = -1;
+		this.sprite.scaleX = -2.5;
 	}
 	else  if (this.speed_<0)
 	{
 		this.state = Player.LEFT;
-		this.sprite.scaleX = 1;
+		this.sprite.scaleX = 2.5;
 	}
 	else
 	{
@@ -87,7 +98,7 @@ Player.prototype.update = function(level)
 {
 	var newX = this.newPosX();
 
-	if (  level.canPlayerMoveTo(newX, this.y_) ) 
+	if (  level.canPlayerMoveTo(newX, this.y_) & (Enter.LEFT | Enter.RIGHT ) ) 
 	{
 		this.setPos(newX, this.y_);
 	} 

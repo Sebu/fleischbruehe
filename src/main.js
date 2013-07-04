@@ -26,6 +26,27 @@ function preloadAssetsAndStart() {
 
 function startMainLoop() {
     var world = new GameWorld();
+    // initSound();
+}
+
+
+function initSound() {
+// if initializeDefaultPlugins returns false, we cannot play sound in this browser
+if (!createjs.Sound.initializeDefaultPlugins()) {return;}
+var audioPath = "res/";
+var manifest = [
+{id:"Music", 
+src:audioPath+"music.mp3"},
+{id:"Thunder", src:audioPath + "Thunder1.mp3|"+audioPath + "Thunder1.ogg"}
+];
+ 
+createjs.Sound.addEventListener("loadComplete", handleSoundLoad);
+createjs.Sound.registerManifest(manifest);
+}
+ 
+function handleSoundLoad(event) {
+    console.log(event);
+createjs.Sound.play(event.src);
 }
 
 var GameWorld  = function()
@@ -49,11 +70,16 @@ GameWorld.prototype.init = function()
 
     stage.addChild( level );
 
-    var player = this.player = new Player(WORLD_CENTER.x, WORLD_CENTER.y);
+    player = this.player = new Player(WORLD_CENTER.x, WORLD_CENTER.y);
  
     stage.addChild( player.sprite );
 
+    labelScore = new createjs.Text("Score: 0", "30px Courier", "#FFFFFF");
+    labelScore.x = 10;
+    labelScore.y =  30;
+    labelScore.textBaseline = "alphabetic";
 
+    stage.addChild( labelScore ); 
 
     var inputManager = new InputManager();
     inputManager.init( stage, this );
@@ -72,12 +98,9 @@ GameWorld.prototype.getLayerForPoint = function( x, y)
 
 GameWorld.prototype.handleInput = function(layer, x, y)
 {
-        if(layer==2)
-            this.player.translate(x, 0);
-    
-        if(Math.abs(x) > Math.abs(y*2))
+        if(Math.abs(x) > Math.abs(y*4))
             this.level.moveLayer( layer, x );
-        else
+        else 
             this.level.translateWorld( x , y );
 }
 
