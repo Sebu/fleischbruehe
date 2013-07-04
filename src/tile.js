@@ -187,6 +187,7 @@ var Level = function()
     this.currentLayer = 0;
     this.playerState = PlayerStates.IDLE;
     this.score = 0;
+    this.isRunning = true;
     this.initialize();
 }
 
@@ -237,7 +238,13 @@ Level.prototype.initialize = function()
     }
     levelGlobal = this;
     this.layers[this.playerLayer].addPlayer( this.player, 2.5 * TILE_WIDTH );
+
+    var shadow = new createjs.Bitmap("res/shadow_shader.png");
+    shadow.scaleY = 120;
+    this.addChild(shadow);
 };
+
+
 
 Level.prototype.addScore = function(score)
 {
@@ -381,6 +388,9 @@ Level.prototype.moveDown = function () {
 }
 
 Level.prototype.update = function () {
+
+    if(!this.isRunning) return;
+
     var playerX = this.layers[this.playerLayer].getPlayerX( this.player );
     var newPos = this.player.x;
     newPos += Math.max( -PLAYER_SPEED_X, Math.min( PLAYER_SPEED_X, 2.5 * TILE_WIDTH - playerX ) );
@@ -410,7 +420,8 @@ Level.prototype.update = function () {
         this.gameOver();
     }
 
-    if(-TILE_HEIGHT * (this.currentLayer-3.7) > this.zombies.y) 
+    // FIX: TODO: remove layers
+    if(-TILE_HEIGHT * (this.currentLayer-3.3) > this.zombies.y) 
     {
         var layerToRemove = this.layers[this.currentLayer-5];
         this.removeChild( layerToRemove );
@@ -482,15 +493,16 @@ Level.prototype.moveLayerEnded = function(layerNo, deltaX, deltaTime)
 
 Level.prototype.gameOver = function()
 {
-    var labelGameOver = new createjs.Text("Game Over :(", "40px Verdana", "#FFFFFF");
-    labelGameOver.x = 200;
-    labelGameOver.y =  400;
-    labelGameOver.textBaseline = "alphabetic";
+    this.isRunning = false;
+    var labelGameOver = new createjs.Bitmap("res/gameover.png");
+    labelGameOver.x = 0;
+    labelGameOver.y =  0;
     stage.addChild(labelGameOver);
     this.zombies.isRunning = false;
 
     document.getElementById('playButton').style.display = 'block';
 
+    console.log("gameOVer");
 
 
 }
@@ -510,7 +522,7 @@ Level.prototype.canPlayerMoveTo = function(x,y)
 };
 
 function ZombieLayer() {
-    this.initialize('res/zombiewave.png');
+    this.initialize('res/zombiewave1.png');
     // this.scaleX = 14;
     this.x = 0;
     this.y = -300;

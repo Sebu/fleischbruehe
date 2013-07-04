@@ -21,7 +21,7 @@ function preloadAssetsAndStart() {
 
         { id: "tile_hole", src: "res/hole2.png" },
         { id: "tile_ladder", src: "res/ladder.png" },
-        { id: "tile_jump", src: "res/jump.png" },
+        { id: "tile_jump", src: "res/trampoline.png" },
         { id: "tile_door_up_a", src: "res/door1up.png" },
         { id: "tile_door_down_a", src: "res/door1down.png" },
         { id: "tile_door_up_b", src: "res/door2up.png" },
@@ -100,6 +100,7 @@ GameWorld.prototype.init = function()
 
  
     level.zombies = new ZombieLayer();
+
     level.addChild( level.zombies );
     stage.addChild( labelScore ); 
 
