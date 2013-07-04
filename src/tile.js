@@ -352,13 +352,23 @@ Level.prototype.update = function()
 
 
    
-    if(-TILE_HEIGHT * (this.currentLayer-4) < this.zombies.y) 
+    if(-TILE_HEIGHT * (this.currentLayer-3.3) > this.zombies.y) 
     {
-        console.log("GAME OVER!1!");
+        this.gameOver();
     }
 
 
 };
+
+Level.prototype.gameOver = function()
+{
+    var labelGameOver = new createjs.Text("Game Over :(", "40px Verdana", "#FFFFFF");
+    labelGameOver.x = 200;
+    labelGameOver.y =  400;
+    labelGameOver.textBaseline = "alphabetic";
+    stage.addChild(labelGameOver);
+    this.zombies.isRunning = false;
+}
 
 Level.prototype.getLayerForPoint = function ( x, y )
 {
@@ -378,7 +388,8 @@ function ZombieLayer() {
     this.initialize('res/block.png');
     this.scaleX = 14;
     this.x = 0;
-    this.y = -200;
+    this.y = -300;
+    this.isRunning = true;
 } 
 
 
@@ -387,7 +398,8 @@ ZombieLayer.prototype = new createjs.Bitmap();
 
 ZombieLayer.prototype.update = function() 
 {
-    this.y -= 1;
+    if(this.isRunning)
+        this.y -= .5;
 }
 
 

@@ -69,7 +69,7 @@ GameWorld.prototype.contructor = GameWorld;
 
 GameWorld.prototype.init = function() 
 {
-    var stage = this.stage = new createjs.Stage( "canvas" );
+    stage = this.stage = new createjs.Stage( "canvas" );
 
     createjs.Ticker.addEventListener( "tick", update );
     createjs.Ticker.useRAF = true;
