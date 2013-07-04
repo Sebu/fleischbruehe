@@ -1,6 +1,6 @@
 
 
-var PLAYER_SPEED_X = 3;
+var PLAYER_SPEED_X = 8;
 var WORLD_CENTER = { x: 320 , y: 420 };
 var Player = function(x, y)
 {

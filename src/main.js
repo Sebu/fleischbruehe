@@ -19,13 +19,22 @@ function preloadAssetsAndStart() {
         { id: "tile_floor2", src: "res/floortile3.png" },
         { id: "tile_floor3", src: "res/floortile4.png" },
 
-        { id: "tile_hole", src: "res/holetile.png" },
+        { id: "tile_hole", src: "res/hole2.png" },
         { id: "tile_ladder", src: "res/ladder.png" },
         { id: "tile_jump", src: "res/jump.png" },
         { id: "tile_door_up_a", src: "res/door1up.png" },
         { id: "tile_door_down_a", src: "res/door1down.png" },
         { id: "tile_door_up_b", src: "res/door2up.png" },
         { id: "tile_door_down_b", src: "res/door2down.png" },
+
+        { id: "player_stand0", src: "res/character_basic.png" },
+        { id: "player_stand1", src: "res/character_idle1.png" },
+
+        { id: "player_walk0", src: "res/character_basic.png" },
+        { id: "player_walk1", src: "res/character_walk1.png" },
+        { id: "player_walk2", src: "res/character_walk2.png" },
+
+        { id: "player_jump", src: "res/character_jump.png" },
     ] );
 }
 
