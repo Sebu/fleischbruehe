@@ -185,6 +185,7 @@ var Level = function()
 {
     this.currentLayer = 0;
     this.playerState = PlayerStates.IDLE;
+    this.score = 0;
     this.initialize();
 }
 
@@ -236,10 +237,18 @@ Level.prototype.initialize = function()
     this.layers[this.playerLayer].addPlayer( this.player, 2.5 * TILE_WIDTH );
 };
 
+Level.prototype.addScore = function(score)
+{
+    this.score += score;
+    labelScore.text = "Score:" + this.score;
+}
+
+
 Level.prototype.moveUp = function ( force ) {
 
     if ( force ) {
         this.currentLayer++;
+
     }
     else {
         var playerLayer = this.layers[this.playerLayer];
@@ -294,11 +303,9 @@ Level.prototype.moveUp = function ( force ) {
             upperLayer.addPlayer( this.player, i + upperLayer.x );
             this.playerLayer = this.playerLayer + layerOffset;
         }
-
-        
     }
-
     if ( this.currentLayer > this.layers.length - 5 ) {
+        this.addScore(100);
         var pattern = this.requestPattern();
         var i = pattern.length;
         var layer = null;
@@ -395,6 +402,12 @@ Level.prototype.update = function () {
         this.player.x = newPos;
     }
 
+    this.zombies.update();
+    if(-TILE_HEIGHT * (this.currentLayer-3.3) > this.zombies.y) 
+    {
+        this.gameOver();
+    }
+
 };
 
 Level.prototype.requestPattern = function () {
@@ -457,6 +470,16 @@ Level.prototype.moveLayerEnded = function(layerNo, deltaX, deltaTime)
 
 }
 
+Level.prototype.gameOver = function()
+{
+    var labelGameOver = new createjs.Text("Game Over :(", "40px Verdana", "#FFFFFF");
+    labelGameOver.x = 200;
+    labelGameOver.y =  400;
+    labelGameOver.textBaseline = "alphabetic";
+    stage.addChild(labelGameOver);
+    this.zombies.isRunning = false;
+}
+
 Level.prototype.getLayerForPoint = function ( x, y )
 {
     var layerNum = Math.floor((this.y - y) / TILE_HEIGHT);
@@ -472,14 +495,22 @@ Level.prototype.canPlayerMoveTo = function(x,y)
 };
 
 function ZombieLayer() {
-    this.initialize('res/block.png');
-    this.scaleX = 14;
+    this.initialize('res/zombiewave.png');
+    // this.scaleX = 14;
     this.x = 0;
-    this.y = 960;
+    this.y = -300;
+    this.isRunning = true;
 } 
 
 
 ZombieLayer.prototype = new createjs.Bitmap();
+
+
+ZombieLayer.prototype.update = function() 
+{
+    if(this.isRunning)
+        this.y -= .5;
+}
 
 
 

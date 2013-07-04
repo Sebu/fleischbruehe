@@ -72,7 +72,7 @@ GameWorld.prototype.contructor = GameWorld;
 
 GameWorld.prototype.init = function() 
 {
-    var stage = this.stage = new createjs.Stage( "canvas" );
+    stage = this.stage = new createjs.Stage( "canvas" );
 
     createjs.Ticker.addEventListener( "tick", update );
     createjs.Ticker.useRAF = true;
@@ -93,8 +93,8 @@ GameWorld.prototype.init = function()
     //stage.addChild( player.sprite );
 
  
-    zombies = new ZombieLayer();
-    level.addChild(zombies);
+    level.zombies = new ZombieLayer();
+    level.addChild( level.zombies );
     stage.addChild( labelScore ); 
 
     var inputManager = new InputManager();
@@ -102,7 +102,7 @@ GameWorld.prototype.init = function()
 
     function update() {
         //player.update(level);
-        zombies.y -= 1;
+
         stage.update();
         level.update();
     }
