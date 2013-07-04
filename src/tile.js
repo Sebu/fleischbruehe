@@ -120,6 +120,7 @@ Level.prototype.initialize = function()
 
 Level.prototype.moveUp = function () {
     this.currentLayer++;
+    player.addScore(100);
     if ( this.currentLayer > this.layers.length - 5 ) {
         var pattern = this.requestPattern();
         var i = pattern.length;
@@ -144,11 +145,24 @@ Level.prototype.requestPattern = function () {
 
 Level.prototype.moveLayer = function(layerNo, offset)
 {
+    console.log(this.currentLayer);
         this.layers[layerNo].moveByOffset( offset );
-        if(layerNo == 2)
+        if(layerNo == this.currentLayer - 3)
 
             player.translate(offset, 0);
 };
+
+Level.prototype.moveLayerEnded = function(layerNo, deltaX, deltaTime)
+{
+    console.log(deltaX);
+    var rest = deltaX % TILE_WIDTH;
+
+    if(rest > TILE_WIDTH/2)
+        this.moveLayer(layerNo, TILE_WIDTH - rest);
+    else
+        this.moveLayer(layerNo, -rest);
+}
+
 
 Level.prototype.translateWorld = function(x, y)
 {
@@ -164,7 +178,6 @@ Level.prototype.getLayerForPoint = function ( x, y )
  
 Level.prototype.canPlayerMoveTo = function(x,y) 
 {
-    return true;
     var layerNo = this.getLayerForPoint( x, y );
 
     return this.layers[layerNo].canPlayerMoveTo(x, y);

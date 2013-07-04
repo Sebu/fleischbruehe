@@ -66,18 +66,21 @@ GameWorld.prototype.init = function()
     createjs.Ticker.useRAF = true;
     createjs.Ticker.setFPS( 30 );
 
-    var level = this.level = new Level();
-
-    stage.addChild( level );
-
-    player = this.player = new Player(WORLD_CENTER.x, WORLD_CENTER.y);
- 
-    stage.addChild( player.sprite );
-
     labelScore = new createjs.Text("Score: 0", "30px Courier", "#FFFFFF");
     labelScore.x = 10;
     labelScore.y =  30;
     labelScore.textBaseline = "alphabetic";
+
+
+    player = this.player = new Player(WORLD_CENTER.x, WORLD_CENTER.y);
+    var level = this.level = new Level();
+
+    stage.addChild( level );
+
+ 
+    stage.addChild( player.sprite );
+
+ 
 
     stage.addChild( labelScore ); 
 

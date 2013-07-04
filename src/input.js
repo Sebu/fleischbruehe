@@ -44,8 +44,11 @@ InputManager.prototype.handleTouchEnd = function ( event ) {
     var touch = this.activeTouches[event.pointerID];
     if ( touch ) {
         delete this.activeTouches[event.pointerID];
-        if ( new Date().getTime() - touch.startTime < 1000 && touch.travelY > 100 ) {
+        var timeDelta =  new Date().getTime() - touch.startTime;
+
+        if ( timeDelta < 1000 && touch.travelY > 250 ) {
             this.world.handleSwipeDown();
         }
+        this.world.level.moveLayerEnded(touch.layer, touch.travelX, timeDelta);
     }
 }
