@@ -392,8 +392,8 @@ Level.prototype.canPlayerMoveTo = function(x,y)
 };
 
 function ZombieLayer() {
-    this.initialize('res/block.png');
-    this.scaleX = 14;
+    this.initialize('res/zombiewave.png');
+    // this.scaleX = 14;
     this.x = 0;
     this.y = -300;
     this.isRunning = true;
