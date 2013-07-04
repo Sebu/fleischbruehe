@@ -88,7 +88,12 @@ GameWorld.prototype.init = function()
  
     stage.addChild( player.sprite );
 
+    labelScore = new createjs.Text("Score: 0", "30px Courier", "#FFFFFF");
+    labelScore.x = 10;
+    labelScore.y =  30;
+    labelScore.textBaseline = "alphabetic";
 
+    stage.addChild( labelScore ); 
 
     var inputManager = new InputManager();
     inputManager.init( stage, this );

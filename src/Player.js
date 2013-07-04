@@ -32,6 +32,7 @@ Player.prototype.initialize = function(x, y)
 	this.speed_ = 0;
 	this.x_ =  x;
 	this.y_ =  y;
+	this.score = 0;
 	this.sprite = new createjs.Bitmap('res/wendy.png');
 	this.sprite.scaleX = 2.5;
 	this.sprite.scaleY = 3;
@@ -68,6 +69,12 @@ Player.prototype.newPosX = function()
 	return newX;	
 }
 
+
+Player.prototype.addScore = function(score)
+{
+	this.score += score;
+	labelScore.text = "Score:" + this.score;
+}
 
 Player.prototype.updateState = function()
 {
