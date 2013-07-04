@@ -99,7 +99,8 @@ Layer.prototype.addPlayer = function ( player, x ) {
     player.x = x - this.x;
     this.addChild( player );
     this.player = player;
-    this.parent.setChildIndex( this, this.parent.children.length - 1);
+    this.parent.setChildIndex( this, levelGlobal.getChildIndex(levelGlobal.zombies) - 1);
+
 }
 
 Layer.prototype.getPlayerX = function ( player ) {
@@ -238,6 +239,7 @@ Level.prototype.initialize = function()
     while ( this.currentLayer < 6 ) {
         this.moveUp( true );
     }
+    levelGlobal = this;
     this.layers[this.playerLayer].addPlayer( this.player, 2.5 * TILE_WIDTH );
 };
 
@@ -420,6 +422,14 @@ Level.prototype.update = function () {
         this.gameOver();
     }
 
+    if(-TILE_HEIGHT * (this.currentLayer-3.7) > this.zombies.y) 
+    {
+        var layerToRemove = this.layers[this.currentLayer-5];
+        this.removeChild( layerToRemove );
+    }
+
+ 
+
 };
 
 Level.prototype.requestPattern = function () {
@@ -516,6 +526,7 @@ function ZombieLayer() {
     // this.scaleX = 14;
     this.x = 0;
     this.y = -300;
+    this.speed = .5;
     this.isRunning = true;
 } 
 
@@ -526,7 +537,7 @@ ZombieLayer.prototype = new createjs.Bitmap();
 ZombieLayer.prototype.update = function() 
 {
     if(this.isRunning)
-        this.y -= .5;
+        this.y -= this.speed;
 }
 
 
