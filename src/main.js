@@ -22,10 +22,10 @@ function preloadAssetsAndStart() {
         { id: "tile_hole", src: "res/holetile.png" },
         { id: "tile_ladder", src: "res/ladder.png" },
         { id: "tile_jump", src: "res/jump.png" },
-        { id: "tile_door_up_a", src: "res/door1.png" },
-        { id: "tile_door_down_a", src: "res/door2.png" },
-        { id: "tile_door_up_b", src: "res/door3.png" },
-        { id: "tile_door_down_b", src: "res/door4.png" },
+        { id: "tile_door_up_a", src: "res/door1up.png" },
+        { id: "tile_door_down_a", src: "res/door1down.png" },
+        { id: "tile_door_up_b", src: "res/door2up.png" },
+        { id: "tile_door_down_b", src: "res/door2down.png" },
     ] );
 }
 
@@ -78,13 +78,13 @@ GameWorld.prototype.init = function()
     labelScore.textBaseline = "alphabetic";
 
 
-    player = this.player = new Player(WORLD_CENTER.x, WORLD_CENTER.y);
+    //player = this.player = new Player(WORLD_CENTER.x, WORLD_CENTER.y);
     var level = this.level = new Level();
 
     stage.addChild( level );
 
  
-    stage.addChild( player.sprite );
+    //stage.addChild( player.sprite );
 
  
 
@@ -94,8 +94,9 @@ GameWorld.prototype.init = function()
     inputManager.init( stage, this );
 
     function update() {
-        player.update(level);
+        //player.update(level);
         stage.update();
+        level.update();
     }
 }
 
@@ -107,9 +108,14 @@ GameWorld.prototype.getLayerForPoint = function( x, y)
 
 GameWorld.prototype.handleInput = function(layer, x, y)
 {
-    this.level.moveLayer( layer, x );
+    if(Math.abs(x) > Math.abs(y*2))
+        this.level.moveLayer( layer, x );
 }
 
 GameWorld.prototype.handleSwipeDown = function () {
     this.level.moveUp();
+}
+
+GameWorld.prototype.handleSwipeUp = function () {
+    this.level.moveDown();
 }

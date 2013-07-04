@@ -6,7 +6,8 @@ var Tile = function(img) {
 };
 
 var Enter  = {
-    LEFT : 1,
+    NONE: 0,
+    LEFT: 1,
     RIGHT : 2,
     TOP : 4,
     BOTTOM : 8
@@ -19,6 +20,7 @@ Tile.prototype.constructor = Tile;
 var Layer = function( tileString ) {
     this.chunks = [];
     this.tileString = tileString;
+    this.player = null;
     this.initialize();
 }
 
@@ -45,9 +47,9 @@ Layer.prototype.snapToGrid = function(layer, deltaX)
 
    var toMove = rest;
 
-    if(rest < -TILE_WIDTH/2)
+    if(rest < -(TILE_WIDTH/2))
         toMove =  TILE_WIDTH + rest;
-    else if(rest > TILE_WIDTH/2) 
+    else if(rest > (TILE_WIDTH/2)) 
          toMove =  - TILE_WIDTH + rest;
 
     console.log(rest, this.x );
@@ -72,12 +74,42 @@ Layer.prototype.moveTo = function(x)
         for ( var i = 0; i < this.chunks.length; i++ ) {
             this.chunks[i].x = i * 5 * TILE_WIDTH - 5 * TILE_WIDTH;
         }
+        if ( this.player ) {
+            this.player.x += 5 * TILE_WIDTH;
+            if ( this.player.x > 10 * TILE_WIDTH ) {
+                this.player.x -= 15 * TILE_WIDTH;
+            }
+        }
     }
     else if ( this.x < -5 * TILE_WIDTH ) {
         this.x += 5 * TILE_WIDTH;
         this.chunks.push( this.chunks.shift() );
         for ( var i = 0; i < this.chunks.length; i++ ) {
             this.chunks[i].x = i * 5 * TILE_WIDTH - 5 * TILE_WIDTH;
+        }
+        if ( this.player ) {
+            this.player.x -= 5 * TILE_WIDTH;
+            if ( this.player.x < -5 * TILE_WIDTH ) {
+                this.player.x += 15 * TILE_WIDTH;
+            }
+        }
+    }
+};
+
+Layer.prototype.addPlayer = function ( player, x ) {
+    player.x = x - this.x;
+    this.addChild( player );
+    this.player = player;
+}
+
+Layer.prototype.getPlayerX = function ( player ) {
+    return this.x + player.x;
+}
+
+Layer.prototype.getTileAt = function ( x ) {
+    for ( var i = 0; i < this.chunks.length; i++ ) {
+        if ( this.chunks[i].x < x && this.chunks[i].x + TILE_WIDTH * 5 > x ) {
+            return this.chunks[i].getTile( x - this.chunks[i].x );
         }
     }
 }
@@ -86,6 +118,30 @@ Layer.prototype.moveByOffset = function(offset)
 {
     var x = this.x + offset;
     this.moveTo(x);
+}
+
+Layer.prototype.collidesAt = function ( x ) {
+    for ( var i = 0; i < this.chunks.length; i++ ) {
+        if ( this.chunks[i].x < x && this.chunks[i].x + TILE_WIDTH * 5 > x ) {
+            var tile = TILELIB[ this.chunks[i].getTile( x - this.chunks[i].x ) ];
+            if ( tile.physic(( x - this.chunks[i].x ) % TILE_WIDTH ) < 0 ) return true;
+        }
+    }
+    return false;
+}
+
+Layer.prototype.removePlayer = function () {
+    this.removeChild( player );
+    this.player = null;
+}
+
+Layer.prototype.canPlayerMoveTo = function ( x, y ) {
+    var chunk = Math.floor(( x - this.x ) / ( 5 * TILE_WIDTH ) );
+
+    var block = Math.floor(( x - ( 5 * TILE_WIDTH ) * chunk - this.x ) / TILE_WIDTH );
+    // var block = Math.floor((x) / TILE_WIDTH) % 5;
+
+    return TILELIB[this.chunks[chunk + 1].tileString.charAt( block )].canEnter;
 };
 
 var LayerChunk = function ( tileString ) {
@@ -113,18 +169,9 @@ LayerChunk.prototype.initialize = function () {
     this.cache( 0, 0, TILE_WIDTH * this.tileString.length, TILE_HEIGHT );
 };
 
-
-
-
-Layer.prototype.canPlayerMoveTo = function(x,y)
-{
-    var chunk = Math.floor((x-this.x) / (5*TILE_WIDTH));
-
-    var block = Math.floor((x - (5*TILE_WIDTH)*chunk  - this.x) / TILE_WIDTH); 
-    // var block = Math.floor((x) / TILE_WIDTH) % 5;
-
-    return TILELIB[this.chunks[chunk+1].tileString.charAt( block ) ].canEnter;
-};
+LayerChunk.prototype.getTile = function ( x ) {
+    return this.tileString.charAt( Math.floor( x / TILE_WIDTH ) );
+}
 
 
 var Level = function()
@@ -140,20 +187,39 @@ Level.prototype.constructor = Level;
 Level.prototype.layers = [];
 Level.prototype.layerIndex  = 0;
 Level.prototype.maxVisibleLayers = 5;
+Level.prototype.player = {};
 
 Level.prototype.base_initialize = Level.prototype.initialize;
 Level.prototype.initialize = function()
 {
     this.base_initialize();
+    this.player = new createjs.Bitmap( 'res/wendy.png' );
+    this.player.layer = 2;
     while ( this.currentLayer < 6 ) {
-        this.moveUp();
+        this.moveUp( true );
     }
-    this.tween = null;
+    this.layers[this.player.layer].addPlayer( this.player, 2.5 * TILE_WIDTH );
 };
 
-Level.prototype.moveUp = function () {
-    this.currentLayer++;
-    player.addScore(100);
+Level.prototype.moveUp = function ( force ) {
+
+    if ( force ) {
+        this.currentLayer++;
+    }
+    else {
+        var playerLayer = this.layers[this.player.layer];
+        var playerTile = playerLayer.getTileAt( this.player.x );
+        var upperLayer = this.layers[this.player.layer + 1];
+        var upperTile = upperLayer.getTileAt( this.player.x + playerLayer.x - upperLayer.x);
+        if ( playerTile == "H" && upperTile == " " ) {
+            this.currentLayer++;
+        }
+    }
+
+
+    //player.addScore(100);
+
+
     if ( this.currentLayer > this.layers.length - 5 ) {
         var pattern = this.requestPattern();
         var i = pattern.length;
@@ -165,11 +231,15 @@ Level.prototype.moveUp = function () {
             layer.y = -TILE_HEIGHT * this.layers.length;
         }
     }
+
     createjs.Tween.get( this, { override: true } ).to( { y: this.currentLayer * TILE_HEIGHT }, 500, createjs.Ease.quadOut );
 }
 
 Level.prototype.moveDown = function () {
-    this.currentLayer--;
+    if ( this.currentLayer > 5 ) {
+        this.currentLayer--;
+        createjs.Tween.get( this, { override: true } ).to( { y: this.currentLayer * TILE_HEIGHT }, 500, createjs.Ease.quadOut );
+    }
 }
 
 Level.prototype.requestPattern = function () {
@@ -179,9 +249,9 @@ Level.prototype.requestPattern = function () {
 Level.prototype.moveLayer = function(layerNo, offset)
 {
         this.layers[layerNo].moveByOffset( offset );
-        if(layerNo == this.currentLayer - 3)
+        //if(layerNo == this.currentLayer - 3)
 
-            player.translate(offset, 0);
+            //player.translate(offset, 0);
 };
 
 
@@ -202,23 +272,33 @@ Level.prototype.moveLayerEnded = function(layerNo, deltaX, deltaTime)
    if(deltaX < 0)
         dir = -1;
 
-   this.twe = dir*speed*100;
+   this.twe = dir*speed*30;
 
-   var that = this;
-
-   this.scrollTween = createjs.Tween.get( this, {override:true})
-            .to({twe: dir*6 }, 2000, createjs.Ease.quadOut)
-            .call(  onCompletooo )  
-            .addEventListener("change", function handleChange(event) {
-                lvl.moveLayer(layerNo, that.twe);
-                })
-            ;
-
+ 
 
     function onComplete()
     {
         l.snapToGrid();
     }
+
+   if (speed > 0.5)
+   {
+        var that = this;
+        this.scrollTween = createjs.Tween.get( this, {override:true})
+            .to({twe: dir*6 }, 2000, createjs.Ease.quadOut)
+            .call(  onComplete )  
+            .addEventListener("change", function handleChange(event) {
+                lvl.moveLayer(layerNo, that.twe);
+                })
+            ;
+
+   } else {
+        onComplete();
+   }
+
+
+
+
 
 }
 
@@ -228,6 +308,12 @@ Level.prototype.moveLayerEnded = function(layerNo, deltaX, deltaTime)
 
 Level.prototype.update = function()
 {
+    var playerX = this.layers[this.player.layer].getPlayerX( this.player );
+    var newPos = this.player.x;
+    newPos += Math.max( -PLAYER_SPEED_X ,Math.min( PLAYER_SPEED_X, 2.5 * TILE_WIDTH - playerX ) );
+    if ( !this.layers[this.player.layer].collidesAt( newPos ) ) {
+        this.player.x = newPos;
+    }
 
 };
 
@@ -244,3 +330,7 @@ Level.prototype.canPlayerMoveTo = function(x,y)
 
     return this.layers[layerNo].canPlayerMoveTo(x, y);
 };
+
+function ZombieLayer() {
+    
+}
