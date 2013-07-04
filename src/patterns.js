@@ -126,6 +126,7 @@ function GetRandomPattern() {
     var pattern = ["__ ___H________"];
     switch ( PATTERN_STATE ) {
         case 0: pattern = ["____H__________", "___ ___________"]; break;
+        default:
         case 1: pattern = PATTERN_LIST[Math.floor( Math.random() * PATTERN_LIST.length )]; break;
     }
     PATTERN_STATE++;
