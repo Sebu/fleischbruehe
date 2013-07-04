@@ -1,25 +1,11 @@
-﻿var PATTERN_LIST = [
-    [
-        "__________",
-        "W__v__WWWW",
-        "__________",
-        "___^______",
-        "_ _____H__",
-        "_J________",
-    ],
-    [
-        "__________",
-        "W__v__WWWW",
-        "__________"
-    ],
-];
-
-var assetLoader = new createjs.LoadQueue();
+﻿var assetLoader = new createjs.LoadQueue();
 function preloadAssetsAndStart() {
     assetLoader.addEventListener( "complete", startMainLoop );
     assetLoader.loadManifest( [
         { id: "tile_wall0", src: "res/wall.png" },
         { id: "tile_wall1", src: "res/wall1.png" },
+
+        { id: "tile_obstacle", src: "res/obstacle.png" },
 
         { id: "tile_bg0", src: "res/bgtile1.png" },
         { id: "tile_bg1", src: "res/bgtile2.png" },
@@ -84,7 +70,6 @@ GameWorld.prototype.getLayerForPoint = function( x, y)
     return this.level.getLayerForPoint(x, y);
 }
 
-
 GameWorld.prototype.handleInput = function(layer, x, y)
 {
         if(layer==2)
@@ -96,4 +81,6 @@ GameWorld.prototype.handleInput = function(layer, x, y)
             this.level.translateWorld( x , y );
 }
 
-
+GameWorld.prototype.handleSwipeDown = function () {
+    this.level.moveUp();
+}

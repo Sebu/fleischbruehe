@@ -86,6 +86,7 @@ Layer.prototype.canPlayerMoveTo = function(x,y)
 
 var Level = function()
 {
+    this.currentLayer = 0;
     this.initialize();
 }
 
@@ -93,43 +94,66 @@ Level.prototype =  new createjs.Container();
 
 Level.prototype.constructor = Level;
 
-Level.prototype.layers_ = [];
+Level.prototype.layers = [];
 Level.prototype.layerIndex  = 0;
 Level.prototype.maxVisibleLayers = 5;
 
+Level.prototype.base_initialize = Level.prototype.initialize;
 Level.prototype.initialize = function()
 {
-    for(var i = 0; i < 6; ++i)
-    {
-        var layer = new Layer("W__W______WWWWW");
-        layer.y = TILE_HEIGHT*i;
-        this.addChild( layer );
-        this.layers_[i] = layer;
+    this.base_initialize();
+    while ( this.currentLayer < 6 ) {
+        this.moveUp();
     }
 };
 
+Level.prototype.moveUp = function () {
+    this.currentLayer++;
+    if ( this.currentLayer > this.layers.length - 5 ) {
+        var pattern = this.requestPattern();
+        var i = pattern.length;
+        var layer = null;
+        while ( i-- ) {
+            layer = new Layer( pattern[i] );
+            this.layers.push( layer );
+            this.addChild( layer );
+            layer.y = -TILE_HEIGHT * this.layers.length;
+        }
+    }
+    createjs.Tween.get( this, { override: true } ).to( { y: this.currentLayer * TILE_HEIGHT }, 500, createjs.Ease.quadOut );
+}
+
+Level.prototype.moveDown = function () {
+    this.currentLayer--;
+}
+
+Level.prototype.requestPattern = function () {
+    return GetRandomPattern();
+}
+
 Level.prototype.moveLayer = function(layerNo, offset)
 {
-        this.layers_[layerNo].moveByOffset( offset );
+        this.layers[layerNo].moveByOffset( offset );
 };
 
 Level.prototype.translateWorld = function(x, y)
 {
-        this.y += y;
+    
 };
 
 Level.prototype.getLayerForPoint = function ( x, y )
 {
-    var layerNum = Math.floor((y - this.y) / TILE_HEIGHT);
+    var layerNum = Math.floor((this.y - y) / TILE_HEIGHT);
     return layerNum;
 };
 
  
 Level.prototype.canPlayerMoveTo = function(x,y) 
 {
-    var layerNo = this.getLayerForPoint(x, y) ;
+    return true;
+    var layerNo = this.getLayerForPoint( x, y );
 
-    return this.layers_[layerNo].canPlayerMoveTo(x, y);
+    return this.layers[layerNo].canPlayerMoveTo(x, y);
 };
 
 
