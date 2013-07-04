@@ -99,6 +99,7 @@ Layer.prototype.addPlayer = function ( player, x ) {
     player.x = x - this.x;
     this.addChild( player );
     this.player = player;
+    this.parent.setChildIndex( this, this.parent.children.length - 1);
 }
 
 Layer.prototype.getPlayerX = function ( player ) {
@@ -201,8 +202,7 @@ Level.prototype.initialize = function()
 {
     this.base_initialize();
 
-    var data = {
-        images: [
+    var images = [
             assetLoader.getResult( "player_stand0" ),
             assetLoader.getResult( "player_stand1" ),
 
@@ -210,13 +210,20 @@ Level.prototype.initialize = function()
             assetLoader.getResult( "player_walk1" ),
             assetLoader.getResult( "player_walk2" ),
 
-            assetLoader.getResult( "player_jump" ),
-        ],
-        frames: { width: TILE_WIDTH, height: TILE_HEIGHT, count: 6, regX: TILE_WIDTH / 2, regY: 0 },
+            assetLoader.getResult( "player_fall" ),
+            assetLoader.getResult( "player_climb0" ),
+            assetLoader.getResult( "player_climb1" ),
+    ]
+
+    var data = {
+        images: images,
+        frames: { width: TILE_WIDTH, height: TILE_HEIGHT, count: images.length, regX: TILE_WIDTH / 2, regY: 0 },
 
         animations: {
             run: [2, 4, "run", 3],
             stand: [0, 1, "stand", 10],
+            fall: [5],
+            climb: [6]
         }
     }
     var spriteSheet = new createjs.SpriteSheet( data );
@@ -245,13 +252,51 @@ Level.prototype.moveUp = function ( force ) {
             playerLayer.removePlayer( this.player );
             upperLayer.addPlayer( this.player, this.player.x + playerLayer.x );
             this.playerLayer = this.playerLayer + 1;
+        } else if ( playerTile == "J" && upperTile == " " ) {
+            this.currentLayer++;
+            playerLayer.removePlayer( this.player );
+            upperLayer.addPlayer( this.player, this.player.x + playerLayer.x );
+            this.playerLayer = this.playerLayer + 1;
+        } else if ( playerTile == "^" ) {
+            var foundDoor = false;
+            var layerOffset = 0;
+            while ( !foundDoor ) {
+                layerOffset++;
+                upperLayer = this.layers[this.playerLayer + layerOffset];
+                for ( i = -5 * TILE_WIDTH + TILE_WIDTH / 2; i < 15 * TILE_WIDTH; i += TILE_WIDTH ) {
+                    upperTile = upperLayer.getTileAt( i );
+                    if ( upperTile == "V" ) {
+                        foundDoor = true;
+                        break;
+                    }
+                }
+            }
+            this.currentLayer += layerOffset;
+            playerLayer.removePlayer( this.player );
+            upperLayer.addPlayer( this.player, i + upperLayer.x );
+            this.playerLayer = this.playerLayer + layerOffset;
+        } else if ( playerTile == "P" ) {
+            var foundDoor = false;
+            var layerOffset = 0;
+            while ( !foundDoor ) {
+                layerOffset++;
+                upperLayer = this.layers[this.playerLayer + layerOffset];
+                for ( i = -5 * TILE_WIDTH + TILE_WIDTH / 2; i < 15 * TILE_WIDTH; i += TILE_WIDTH ) {
+                    upperTile = upperLayer.getTileAt( i );
+                    if ( upperTile == "B" ) {
+                        foundDoor = true;
+                        break;
+                    }
+                }
+            }
+            this.currentLayer += layerOffset;
+            playerLayer.removePlayer( this.player );
+            upperLayer.addPlayer( this.player, i + upperLayer.x );
+            this.playerLayer = this.playerLayer + layerOffset;
         }
+
         
     }
-
-
-    //player.addScore(100);
-
 
     if ( this.currentLayer > this.layers.length - 5 ) {
         var pattern = this.requestPattern();
@@ -269,11 +314,88 @@ Level.prototype.moveUp = function ( force ) {
 }
 
 Level.prototype.moveDown = function () {
-    //if ( this.currentLayer > 5 ) {
-    //    this.currentLayer--;
-    //    createjs.Tween.get( this, { override: true } ).to( { y: this.currentLayer * TILE_HEIGHT }, 500, createjs.Ease.quadOut );
-    //}
+    if ( this.currentLayer <= 5 ) return;
+
+    var playerLayer = this.layers[this.playerLayer];
+    var playerTile = playerLayer.getTileAt( this.player.x );
+    var lowerLayer = this.layers[this.playerLayer - 1];
+    var lowerPlayerX = this.player.x + playerLayer.x - lowerLayer.x;
+    var lowerTile = lowerLayer.getTileAt( lowerPlayerX );
+    if ( playerTile == " " && ( lowerTile != "W" || lowerTile != "S" ) ) {
+        this.currentLayer--;
+        playerLayer.removePlayer( this.player );
+        lowerLayer.addPlayer( this.player, this.player.x + playerLayer.x );
+        this.playerLayer = this.playerLayer - 1;
+        this.playerState = PlayerStates.FALL;
+        this.player.y = -TILE_HEIGHT;
+        createjs.Tween.get( this.player ).to( { y: 0 }, 1000 );
+        this.player.gotoAndPlay( "fall" );
+    } else if ( playerTile == "V" ) {
+        var foundDoor = false;
+        var layerOffset = 0;
+        while ( !foundDoor ) {
+            layerOffset--;
+            lowerLayer = this.layers[this.playerLayer + layerOffset];
+            for ( i = -5 * TILE_WIDTH + TILE_WIDTH / 2; i < 15 * TILE_WIDTH; i += TILE_WIDTH ) {
+                lowerTile = lowerLayer.getTileAt( i );
+                if ( lowerTile == "^" ) {
+                    foundDoor = true;
+                    break;
+                }
+            }
+        }
+        this.currentLayer += layerOffset;
+        playerLayer.removePlayer( this.player );
+        lowerLayer.addPlayer( this.player, i + lowerLayer.x );
+        this.playerLayer = this.playerLayer + layerOffset;
+    } else if ( playerTile == "B" ) {
+        var foundDoor = false;
+        var layerOffset = 0;
+        while ( !foundDoor ) {
+            layerOffset--;
+            lowerLayer = this.layers[this.playerLayer + layerOffset];
+            for ( i = -5 * TILE_WIDTH + TILE_WIDTH / 2; i < 15 * TILE_WIDTH; i += TILE_WIDTH ) {
+                lowerTile = lowerLayer.getTileAt( i );
+                if ( lowerTile == "P" ) {
+                    foundDoor = true;
+                    break;
+                }
+            }
+        }
+        this.currentLayer += layerOffset;
+        playerLayer.removePlayer( this.player );
+        lowerLayer.addPlayer( this.player, i + lowerLayer.x );
+        this.playerLayer = this.playerLayer + layerOffset;
+    }
+
+    createjs.Tween.get( this, { override: true } ).to( { y: this.currentLayer * TILE_HEIGHT }, 500, createjs.Ease.quadOut );
 }
+
+Level.prototype.update = function () {
+    var playerX = this.layers[this.playerLayer].getPlayerX( this.player );
+    var newPos = this.player.x;
+    newPos += Math.max( -PLAYER_SPEED_X, Math.min( PLAYER_SPEED_X, 2.5 * TILE_WIDTH - playerX ) );
+
+    if ( this.player.x < newPos && this.playerState != PlayerStates.RIGHT ) {
+        this.playerState = PlayerStates.RIGHT;
+        this.player.gotoAndPlay( "run" );
+        this.player.scaleX = 1;
+    }
+    else if ( this.player.x > newPos && this.playerState != PlayerStates.LEFT ) {
+        this.playerState = PlayerStates.LEFT;
+        this.player.gotoAndPlay( "run" );
+        this.player.scaleX = -1;
+    }
+    else if ( this.player.x == newPos && this.playerState != PlayerStates.IDLE && this.player.y == 0 ) {
+        this.playerState = PlayerStates.IDLE;
+        this.player.gotoAndPlay( "stand" );
+    }
+
+    if ( !this.layers[this.playerLayer].collidesAt( newPos ) ) {
+        this.player.x = newPos;
+    }
+
+};
 
 Level.prototype.requestPattern = function () {
     return GetRandomPattern();
@@ -334,21 +456,6 @@ Level.prototype.moveLayerEnded = function(layerNo, deltaX, deltaTime)
 
 
 }
-
-
-
-
-
-Level.prototype.update = function()
-{
-    var playerX = this.layers[this.playerLayer].getPlayerX( this.player );
-    var newPos = this.player.x;
-    newPos += Math.max( -PLAYER_SPEED_X ,Math.min( PLAYER_SPEED_X, 2.5 * TILE_WIDTH - playerX ) );
-    if ( !this.layers[this.playerLayer].collidesAt( newPos ) ) {
-        this.player.x = newPos;
-    }
-
-};
 
 Level.prototype.getLayerForPoint = function ( x, y )
 {

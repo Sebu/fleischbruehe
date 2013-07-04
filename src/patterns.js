@@ -6,9 +6,9 @@
 		"_______ H______",
 	],
 	[// 13
-		"_______________",
-		"________V______",
-		"____SSSSSSS____",
+		"_____H___ _____",
+		"_ ______V___H__",
+		"_H__SSSSSSS____",
 		"_____^_ _______",
 	],
 	[// 14
@@ -120,6 +120,14 @@
 	],
 ];
 
+PATTERN_STATE = 0;
+
 function GetRandomPattern() {
-	return PATTERN_LIST[0] //PATTERN_LIST[Math.floor( Math.random() * PATTERN_LIST.length )];
+    var pattern = ["__ ___H________"];
+    switch ( PATTERN_STATE ) {
+        case 0: pattern = ["____H__________", "___ ___________"]; break;
+        case 1: pattern = PATTERN_LIST[Math.floor( Math.random() * PATTERN_LIST.length )]; break;
+    }
+    PATTERN_STATE++;
+    return pattern;
 }
