@@ -131,7 +131,7 @@ function GetRandomPattern() {
             "__H___ ________",
             "__ ___H________",
             "__ _______H____",
-            "__H___ ________", ]; break;
+            "__H____________", ]; break;
         default:
         case 1: pattern = PATTERN_LIST[Math.floor( Math.random() * PATTERN_LIST.length )]; break;
     }
