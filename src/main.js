@@ -40,6 +40,27 @@ function preloadAssetsAndStart() {
 
 function startMainLoop() {
     var world = new GameWorld();
+    // initSound();
+}
+
+
+function initSound() {
+// if initializeDefaultPlugins returns false, we cannot play sound in this browser
+if (!createjs.Sound.initializeDefaultPlugins()) {return;}
+var audioPath = "res/";
+var manifest = [
+{id:"Music", 
+src:audioPath+"music.mp3"},
+{id:"Thunder", src:audioPath + "Thunder1.mp3|"+audioPath + "Thunder1.ogg"}
+];
+ 
+createjs.Sound.addEventListener("loadComplete", handleSoundLoad);
+createjs.Sound.registerManifest(manifest);
+}
+ 
+function handleSoundLoad(event) {
+    console.log(event);
+createjs.Sound.play(event.src);
 }
 
 var GameWorld  = function()
