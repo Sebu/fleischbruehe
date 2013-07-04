@@ -32,7 +32,7 @@ function preloadAssetsAndStart() {
 
 function startMainLoop() {
     var world = new GameWorld();
-    // initSound();
+    initSound();
 }
 
 
@@ -41,9 +41,8 @@ function initSound() {
 if (!createjs.Sound.initializeDefaultPlugins()) {return;}
 var audioPath = "res/";
 var manifest = [
-{id:"Music", 
-src:audioPath+"music.mp3"},
-{id:"Thunder", src:audioPath + "Thunder1.mp3|"+audioPath + "Thunder1.ogg"}
+{id:"princes",
+src:audioPath + "princes-do-do-do.mp3"}
 ];
  
 createjs.Sound.addEventListener("loadComplete", handleSoundLoad);

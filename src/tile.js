@@ -284,7 +284,7 @@ Level.prototype.moveLayerEnded = function(layerNo, deltaX, deltaTime)
    if (speed > 0.5)
    {
         var that = this;
-        this.scrollTween = createjs.Tween.get( this, {override:true})
+        createjs.Tween.get( this, {override:true})
             .to({twe: dir*6 }, 2000, createjs.Ease.quadOut)
             .call(  onComplete )  
             .addEventListener("change", function handleChange(event) {
@@ -332,5 +332,15 @@ Level.prototype.canPlayerMoveTo = function(x,y)
 };
 
 function ZombieLayer() {
-    
-}
+    this.initialize('res/block.png');
+    this.scale = 4;
+} 
+
+
+ZombieLayer.prototype = new createjs.Bitmap();
+
+
+
+
+
+
