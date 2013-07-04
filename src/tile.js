@@ -38,9 +38,34 @@ Layer.prototype.initialize = function () {
 };
 
 
-Layer.prototype.moveByOffset = function(offset)
+Layer.prototype.snapToGrid = function(layer, deltaX)
 {
-    this.x += offset;
+
+   var rest =  this.x % TILE_WIDTH;
+
+   var toMove = rest;
+
+    if(rest < -TILE_WIDTH/2)
+        toMove =  TILE_WIDTH + rest;
+    else if(rest > TILE_WIDTH/2) 
+         toMove =  - TILE_WIDTH + rest;
+
+    console.log(rest, this.x );
+
+    var prop = { x:  this.x };
+    var that = this;
+        createjs.Tween.get( prop , {override:true})
+            .to({x: this.x - toMove }, 200, createjs.Ease.quadOut)
+            .addEventListener("change", function handleChange(event) {
+           that.moveTo(prop.x);
+    } );
+}
+
+
+Layer.prototype.moveTo = function(x)
+{
+    this.x = x;
+
     if ( this.x > 5 * TILE_WIDTH ) {
         this.x -= 5 * TILE_WIDTH;
         this.chunks.unshift( this.chunks.pop() );
@@ -55,6 +80,12 @@ Layer.prototype.moveByOffset = function(offset)
             this.chunks[i].x = i * 5 * TILE_WIDTH - 5 * TILE_WIDTH;
         }
     }
+}
+
+Layer.prototype.moveByOffset = function(offset)
+{
+    var x = this.x + offset;
+    this.moveTo(x);
 };
 
 var LayerChunk = function ( tileString ) {
@@ -95,6 +126,7 @@ Layer.prototype.canPlayerMoveTo = function(x,y)
     return TILELIB[this.chunks[chunk+1].tileString.charAt( block ) ].canEnter;
 };
 
+
 var Level = function()
 {
     this.currentLayer = 0;
@@ -116,6 +148,7 @@ Level.prototype.initialize = function()
     while ( this.currentLayer < 6 ) {
         this.moveUp();
     }
+    this.tween = null;
 };
 
 Level.prototype.moveUp = function () {
@@ -145,7 +178,6 @@ Level.prototype.requestPattern = function () {
 
 Level.prototype.moveLayer = function(layerNo, offset)
 {
-    console.log(this.currentLayer);
         this.layers[layerNo].moveByOffset( offset );
         if(layerNo == this.currentLayer - 3)
 
@@ -154,18 +186,32 @@ Level.prototype.moveLayer = function(layerNo, offset)
 
 Level.prototype.moveLayerEnded = function(layerNo, deltaX, deltaTime)
 {
-    var rest = deltaX % TILE_WIDTH;
 
-    console.log( rest, deltaX );
+   createjs.Tween.removeTweens(this);
+   var lvl = this;
+   var l = this.layers[layerNo];
+
+   var speed = Math.abs(deltaX) / deltaTime;
+   var dir = 1;
+   if(deltaX < 0)
+        dir = -1;
+
+   this.twe = dir*speed*100;
+
+   var that = this;
+   this.scrollTween = createjs.Tween.get( this, {override:true})
+            .to({twe: dir*6 }, 2000, createjs.Ease.quadOut)
+            .addEventListener("change", function handleChange(event) {
+                lvl.moveLayer(layerNo, that.twe);
+                })
+            .call( l.snapToGrid() );
 
 
-    if(rest > TILE_WIDTH/2)
-        this.moveLayer(layerNo, TILE_WIDTH - rest);
-    else if(rest < -TILE_WIDTH/2)
-        this.moveLayer(layerNo, - TILE_WIDTH - rest);
-    else
-        this.moveLayer(layerNo, - rest);
+
 }
+
+
+
 
 Level.prototype.update = function()
 {
