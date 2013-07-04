@@ -185,6 +185,7 @@ var PlayerStates = {
 
 var Level = function()
 {
+    this.alert = new createjs.Bitmap(assetLoader.getResult( "alert" ));
     this.currentLayer = 0;
     this.playerState = PlayerStates.IDLE;
     this.score = 0;
@@ -414,6 +415,31 @@ Level.prototype.update = function () {
 
     if ( !this.layers[this.playerLayer].collidesAt( newPos ) ) {
         this.player.x = newPos;
+    }
+
+    if ( this.player.x + this.layers[this.playerLayer].x < 0 ) {
+        if ( !this.alert.parent ) {
+            this.alert.alpha = 1;
+            createjs.Tween.get( this.alert, { loop: true } ).to( { alpha: 0.5 }, 500 );
+            this.addChild( this.alert );
+        }
+        this.alert.y = this.layers[this.playerLayer].y;
+        this.alert.x = 0;
+        this.alert.scaleX = 1;
+    }
+    else if ( this.player.x + this.layers[this.playerLayer].x > TILE_WIDTH * 5 ) {
+        if ( !this.alert.parent ) {
+            this.alert.alpha = 1;
+            createjs.Tween.get( this.alert, { loop: true } ).to( { alpha: 0.5 }, 500 );
+            this.addChild( this.alert );
+        }
+        this.alert.y = this.layers[this.playerLayer].y;
+        this.alert.x = TILE_WIDTH * 5;
+        this.alert.scaleX = -1;
+    }
+    else if ( this.alert.parent ) {
+        this.removeChild( this.alert );
+        createjs.Tween.removeTweens( this.alert );
     }
 
     this.zombies.update();
