@@ -20,6 +20,12 @@ function preloadAssetsAndStart() {
         { id: "tile_floor3", src: "res/floortile4.png" },
 
         { id: "tile_hole", src: "res/holetile.png" },
+        { id: "tile_ladder", src: "res/ladder.png" },
+        { id: "tile_jump", src: "res/jump.png" },
+        { id: "tile_door_up_a", src: "res/door1.png" },
+        { id: "tile_door_down_a", src: "res/door2.png" },
+        { id: "tile_door_up_b", src: "res/door3.png" },
+        { id: "tile_door_down_b", src: "res/door4.png" },
     ] );
 }
 

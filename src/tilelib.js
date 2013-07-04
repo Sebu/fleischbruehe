@@ -25,18 +25,48 @@
         physic: function ( x ) { return -1 },
         canEnter : Enter.BOTTOM
     }
+    var jump = {
+        images: ["tile_jump", ],
+        physic: function ( x ) { return -1 },
+        canEnter: Enter.BOTTOM
+    }
+    var ladder = {
+        images: ["tile_ladder", ],
+        physic: function ( x ) { return -1 },
+        canEnter: Enter.BOTTOM
+    }
+    var doorUpA = {
+        images: ["tile_door_up_a", ],
+        physic: function ( x ) { return -1 },
+        canEnter: Enter.BOTTOM
+    }
+    var doorDownA = {
+        images: ["tile_door_down_b", ],
+        physic: function ( x ) { return -1 },
+        canEnter: Enter.BOTTOM
+    }
+    var doorUpB = {
+        images: ["tile_door_up_b", ],
+        physic: function ( x ) { return -1 },
+        canEnter: Enter.BOTTOM
+    }
+    var doorDownB = {
+        images: ["tile_door_down_b", ],
+        physic: function ( x ) { return -1 },
+        canEnter: Enter.BOTTOM
+    }
 
     var TILELIB = {
         "_": floor,
         "W": slimwall,
         " ": hole,
-        "J": floor,
-        "H": floor,
+        "J": jump,
+        "H": ladder,
         "S": solidwall,
-        "^": floor,
-        "V": floor,
-        "B": floor,
-        "P": floor,
+        "^": doorUpA,
+        "V": doorDownA,
+        "P": doorUpB,
+        "B": doorDownB,
         }
 
     window.TILELIB = TILELIB;
