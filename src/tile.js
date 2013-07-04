@@ -178,7 +178,8 @@ var PlayerStates = {
     LEFT : 1,
     RIGHT: 2,
     JUMP: 3,
-    FALL: 4
+    FALL: 4,
+    CLIMB: 5,
 }
 
 var Level = function()
@@ -212,6 +213,7 @@ Level.prototype.initialize = function()
             assetLoader.getResult( "player_walk2" ),
 
             assetLoader.getResult( "player_fall" ),
+            assetLoader.getResult( "player_jump" ),
             assetLoader.getResult( "player_climb0" ),
             assetLoader.getResult( "player_climb1" ),
     ]
@@ -224,7 +226,9 @@ Level.prototype.initialize = function()
             run: [2, 4, "run", 3],
             stand: [0, 1, "stand", 10],
             fall: [5],
-            climb: [6]
+            jump: [6],
+            climb: [7, 8, "climb", 5],
+
         }
     }
     var spriteSheet = new createjs.SpriteSheet( data );
@@ -256,16 +260,24 @@ Level.prototype.moveUp = function ( force ) {
         var upperLayer = this.layers[this.playerLayer + 1];
         var upperPlayerX = this.player.x + playerLayer.x - upperLayer.x;
         var upperTile = upperLayer.getTileAt( upperPlayerX );
-        if ( playerTile == "H" && upperTile == " " ) {
+        if ( playerTile == "H" && upperTile == " " && ( this.playerState == PlayerStates.IDLE || this.playerState == PlayerStates.LEFT || this.playerState == PlayerStates.RIGHT ) ) {
             this.currentLayer++;
             playerLayer.removePlayer( this.player );
             upperLayer.addPlayer( this.player, this.player.x + playerLayer.x );
             this.playerLayer = this.playerLayer + 1;
-        } else if ( playerTile == "J" && upperTile == " " ) {
+            this.playerState = PlayerStates.CLIMB;
+            this.player.y = TILE_HEIGHT;
+            createjs.Tween.get( this.player ).to( { y: 0 }, 1000 );
+            this.player.gotoAndPlay( "climb" );
+        } else if ( playerTile == "J" && upperTile == " " && ( this.playerState == PlayerStates.IDLE || this.playerState == PlayerStates.LEFT || this.playerState == PlayerStates.RIGHT ) ) {
             this.currentLayer++;
             playerLayer.removePlayer( this.player );
             upperLayer.addPlayer( this.player, this.player.x + playerLayer.x );
             this.playerLayer = this.playerLayer + 1;
+            this.playerState = PlayerStates.JUMP;
+            this.player.y = TILE_HEIGHT;
+            createjs.Tween.get( this.player ).to( { y: 0 }, 300 );
+            this.player.gotoAndPlay( "jump" );
         } else if ( playerTile == "^" ) {
             var foundDoor = false;
             var layerOffset = 0;
@@ -328,7 +340,7 @@ Level.prototype.moveDown = function () {
     var lowerLayer = this.layers[this.playerLayer - 1];
     var lowerPlayerX = this.player.x + playerLayer.x - lowerLayer.x;
     var lowerTile = lowerLayer.getTileAt( lowerPlayerX );
-    if ( playerTile == " " && ( lowerTile != "W" || lowerTile != "S" ) ) {
+    if ( playerTile == " " && ( lowerTile != "W" || lowerTile != "S" ) && ( this.playerState == PlayerStates.IDLE || this.playerState == PlayerStates.LEFT || this.playerState == PlayerStates.RIGHT ) ) {
         this.currentLayer--;
         playerLayer.removePlayer( this.player );
         lowerLayer.addPlayer( this.player, this.player.x + playerLayer.x );
@@ -383,12 +395,12 @@ Level.prototype.update = function () {
     var newPos = this.player.x;
     newPos += Math.max( -PLAYER_SPEED_X, Math.min( PLAYER_SPEED_X, 2.5 * TILE_WIDTH - playerX ) );
 
-    if ( this.player.x < newPos && this.playerState != PlayerStates.RIGHT ) {
+    if ( this.player.x < newPos && this.playerState != PlayerStates.RIGHT && this.player.y == 0 ) {
         this.playerState = PlayerStates.RIGHT;
         this.player.gotoAndPlay( "run" );
         this.player.scaleX = 1;
     }
-    else if ( this.player.x > newPos && this.playerState != PlayerStates.LEFT ) {
+    else if ( this.player.x > newPos && this.playerState != PlayerStates.LEFT && this.player.y == 0 ) {
         this.playerState = PlayerStates.LEFT;
         this.player.gotoAndPlay( "run" );
         this.player.scaleX = -1;
