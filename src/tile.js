@@ -199,6 +199,9 @@ Level.prototype.initialize = function()
         this.moveUp( true );
     }
     this.layers[this.player.layer].addPlayer( this.player, 2.5 * TILE_WIDTH );
+
+ 
+
 };
 
 Level.prototype.moveUp = function ( force ) {
@@ -333,11 +336,16 @@ Level.prototype.canPlayerMoveTo = function(x,y)
 
 function ZombieLayer() {
     this.initialize('res/block.png');
-    this.scale = 4;
+    this.scaleX = 14;
+    this.x = 0;
+    this.y = 960;
 } 
 
 
 ZombieLayer.prototype = new createjs.Bitmap();
+
+
+
 
 
 
