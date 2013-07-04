@@ -184,6 +184,7 @@ var Level = function()
 {
     this.currentLayer = 0;
     this.playerState = PlayerStates.IDLE;
+    this.score = 0;
     this.initialize();
 }
 
@@ -229,10 +230,18 @@ Level.prototype.initialize = function()
     this.layers[this.playerLayer].addPlayer( this.player, 2.5 * TILE_WIDTH );
 };
 
+Level.prototype.addScore = function(score)
+{
+    this.score += score;
+    labelScore.text = "Score:" + this.score;
+}
+
+
 Level.prototype.moveUp = function ( force ) {
 
     if ( force ) {
         this.currentLayer++;
+
     }
     else {
         var playerLayer = this.layers[this.playerLayer];
@@ -246,11 +255,9 @@ Level.prototype.moveUp = function ( force ) {
             upperLayer.addPlayer( this.player, this.player.x + playerLayer.x );
             this.playerLayer = this.playerLayer + 1;
         }
-        
+        this.addScore(100);
     }
 
-
-    //player.addScore(100);
 
 
     if ( this.currentLayer > this.layers.length - 5 ) {
