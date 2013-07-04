@@ -36,7 +36,7 @@
         canEnter: Enter.LEFT | Enter.RIGHT
     }
     var doorDownA = {
-        images: ["tile_door_down_b", ],
+        images: ["tile_door_down_a", ],
         physic: function ( x ) { return 10 },
         canEnter: Enter.LEFT | Enter.RIGHT
     }
