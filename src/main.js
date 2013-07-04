@@ -41,27 +41,21 @@ function preloadAssetsAndStart() {
 
 function startMainLoop() {
     var world = new GameWorld();
-    // initSound();
+    initSound();
 }
 
 
 function initSound() {
 // if initializeDefaultPlugins returns false, we cannot play sound in this browser
-if (!createjs.Sound.initializeDefaultPlugins()) {return;}
-var audioPath = "res/";
-var manifest = [
-{id:"Music", 
-src:audioPath+"music.mp3"},
-{id:"Thunder", src:audioPath + "Thunder1.mp3|"+audioPath + "Thunder1.ogg"}
-];
- 
-createjs.Sound.addEventListener("loadComplete", handleSoundLoad);
-createjs.Sound.registerManifest(manifest);
+createjs.Sound.registerPlugins([createjs.HTMLAudioPlugin]);
+createjs.Sound.addEventListener("fileload", handleSoundLoad);
+createjs.Sound.registerSound("res/princes-do-do-do.mp3", "princes");
+
 }
  
 function handleSoundLoad(event) {
     console.log(event);
-createjs.Sound.play(event.src);
+createjs.Sound.play("princes");
 }
 
 var GameWorld  = function()
@@ -96,7 +90,8 @@ GameWorld.prototype.init = function()
     //stage.addChild( player.sprite );
 
  
-
+    zombies = new ZombieLayer();
+    level.addChild(zombies);
     stage.addChild( labelScore ); 
 
     var inputManager = new InputManager();
@@ -104,6 +99,7 @@ GameWorld.prototype.init = function()
 
     function update() {
         //player.update(level);
+        zombies.y -= 1;
         stage.update();
         level.update();
     }
@@ -117,7 +113,8 @@ GameWorld.prototype.getLayerForPoint = function( x, y)
 
 GameWorld.prototype.handleInput = function(layer, x, y)
 {
-    this.level.moveLayer( layer, x );
+    if(Math.abs(x) > Math.abs(y*2))
+        this.level.moveLayer( layer, x );
 }
 
 GameWorld.prototype.handleSwipeDown = function () {
