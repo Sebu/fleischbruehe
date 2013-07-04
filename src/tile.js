@@ -16,7 +16,6 @@ var Enter  = {
 Tile.prototype = new createjs.Bitmap();
 Tile.prototype.constructor = Tile;
 
-
 var Layer = function( tileString ) {
     this.chunks = [];
     this.tileString = tileString;
@@ -130,8 +129,8 @@ Layer.prototype.collidesAt = function ( x ) {
     return false;
 }
 
-Layer.prototype.removePlayer = function () {
-    this.removeChild( player );
+Layer.prototype.removePlayer = function ( ) {
+    this.removeChild( this.player );
     this.player = null;
 }
 
@@ -173,10 +172,18 @@ LayerChunk.prototype.getTile = function ( x ) {
     return this.tileString.charAt( Math.floor( x / TILE_WIDTH ) );
 }
 
+var PlayerStates = {
+    IDLE : 0,
+    LEFT : 1,
+    RIGHT: 2,
+    JUMP: 3,
+    FALL: 4
+}
 
 var Level = function()
 {
     this.currentLayer = 0;
+    this.playerState = PlayerStates.IDLE;
     this.initialize();
 }
 
@@ -193,15 +200,33 @@ Level.prototype.base_initialize = Level.prototype.initialize;
 Level.prototype.initialize = function()
 {
     this.base_initialize();
-    this.player = new createjs.Bitmap( 'res/wendy.png' );
-    this.player.layer = 2;
+
+    var data = {
+        images: [
+            assetLoader.getResult( "player_stand0" ),
+            assetLoader.getResult( "player_stand1" ),
+
+            assetLoader.getResult( "player_walk0" ),
+            assetLoader.getResult( "player_walk1" ),
+            assetLoader.getResult( "player_walk2" ),
+
+            assetLoader.getResult( "player_jump" ),
+        ],
+        frames: { width: TILE_WIDTH, height: TILE_HEIGHT, count: 6, regX: TILE_WIDTH / 2, regY: 0 },
+
+        animations: {
+            run: [2, 4, "run", 3],
+            stand: [0, 1, "stand", 10],
+        }
+    }
+    var spriteSheet = new createjs.SpriteSheet( data );
+    this.player = new createjs.BitmapAnimation( spriteSheet );
+    this.player.gotoAndPlay( "stand" );
+    this.playerLayer = 2;
     while ( this.currentLayer < 6 ) {
         this.moveUp( true );
     }
-    this.layers[this.player.layer].addPlayer( this.player, 2.5 * TILE_WIDTH );
-
- 
-
+    this.layers[this.playerLayer].addPlayer( this.player, 2.5 * TILE_WIDTH );
 };
 
 Level.prototype.moveUp = function ( force ) {
@@ -210,13 +235,18 @@ Level.prototype.moveUp = function ( force ) {
         this.currentLayer++;
     }
     else {
-        var playerLayer = this.layers[this.player.layer];
+        var playerLayer = this.layers[this.playerLayer];
         var playerTile = playerLayer.getTileAt( this.player.x );
-        var upperLayer = this.layers[this.player.layer + 1];
-        var upperTile = upperLayer.getTileAt( this.player.x + playerLayer.x - upperLayer.x);
+        var upperLayer = this.layers[this.playerLayer + 1];
+        var upperPlayerX = this.player.x + playerLayer.x - upperLayer.x;
+        var upperTile = upperLayer.getTileAt( upperPlayerX );
         if ( playerTile == "H" && upperTile == " " ) {
             this.currentLayer++;
+            playerLayer.removePlayer( this.player );
+            upperLayer.addPlayer( this.player, this.player.x + playerLayer.x );
+            this.playerLayer = this.playerLayer + 1;
         }
+        
     }
 
 
@@ -239,10 +269,10 @@ Level.prototype.moveUp = function ( force ) {
 }
 
 Level.prototype.moveDown = function () {
-    if ( this.currentLayer > 5 ) {
-        this.currentLayer--;
-        createjs.Tween.get( this, { override: true } ).to( { y: this.currentLayer * TILE_HEIGHT }, 500, createjs.Ease.quadOut );
-    }
+    //if ( this.currentLayer > 5 ) {
+    //    this.currentLayer--;
+    //    createjs.Tween.get( this, { override: true } ).to( { y: this.currentLayer * TILE_HEIGHT }, 500, createjs.Ease.quadOut );
+    //}
 }
 
 Level.prototype.requestPattern = function () {
@@ -311,10 +341,10 @@ Level.prototype.moveLayerEnded = function(layerNo, deltaX, deltaTime)
 
 Level.prototype.update = function()
 {
-    var playerX = this.layers[this.player.layer].getPlayerX( this.player );
+    var playerX = this.layers[this.playerLayer].getPlayerX( this.player );
     var newPos = this.player.x;
     newPos += Math.max( -PLAYER_SPEED_X ,Math.min( PLAYER_SPEED_X, 2.5 * TILE_WIDTH - playerX ) );
-    if ( !this.layers[this.player.layer].collidesAt( newPos ) ) {
+    if ( !this.layers[this.playerLayer].collidesAt( newPos ) ) {
         this.player.x = newPos;
     }
 
