@@ -101,5 +101,6 @@ Player.prototype.update = function(level)
 	if (  level.canPlayerMoveTo(newX, this.y_) & (Enter.LEFT | Enter.RIGHT ) ) 
 	{
 		this.setPos(newX, this.y_);
-	} 
+	}
+	//if ( level.getTileAt( newX, this.y_ ) == " " && level.getTileAt( newX, this.y_ ) == " ")
 }

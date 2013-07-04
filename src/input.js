@@ -49,6 +49,9 @@ InputManager.prototype.handleTouchEnd = function ( event ) {
         if ( timeDelta < 1000 && touch.travelY > 250 ) {
             this.world.handleSwipeDown();
         }
-        this.world.level.moveLayerEnded(touch.layer, touch.travelX, timeDelta);
+        else if ( timeDelta < 1000 && touch.travelY < -250 ) {
+            this.world.handleSwipeUp();
+        }
+        this.world.level.moveLayerEnded( touch.layer, touch.travelX, timeDelta );
     }
 }

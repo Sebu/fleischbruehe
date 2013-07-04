@@ -116,3 +116,7 @@ GameWorld.prototype.handleInput = function(layer, x, y)
 GameWorld.prototype.handleSwipeDown = function () {
     this.level.moveUp();
 }
+
+GameWorld.prototype.handleSwipeUp = function () {
+    this.level.moveDown();
+}

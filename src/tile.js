@@ -6,7 +6,8 @@ var Tile = function(img) {
 };
 
 var Enter  = {
-    LEFT : 1,
+    NONE: 0,
+    LEFT: 1,
     RIGHT : 2,
     TOP : 4,
     BOTTOM : 8
@@ -136,7 +137,10 @@ Level.prototype.moveUp = function () {
 }
 
 Level.prototype.moveDown = function () {
-    this.currentLayer--;
+    if ( this.currentLayer > 5 ) {
+        this.currentLayer--;
+        createjs.Tween.get( this, { override: true } ).to( { y: this.currentLayer * TILE_HEIGHT }, 500, createjs.Ease.quadOut );
+    }
 }
 
 Level.prototype.requestPattern = function () {
@@ -163,7 +167,6 @@ Level.prototype.moveLayerEnded = function(layerNo, deltaX, deltaTime)
         this.moveLayer(layerNo, -rest);
 }
 
-
 Level.prototype.translateWorld = function(x, y)
 {
 
@@ -182,3 +185,7 @@ Level.prototype.canPlayerMoveTo = function(x,y)
 
     return this.layers[layerNo].canPlayerMoveTo(x, y);
 };
+
+function ZombieLayer() {
+    
+}
