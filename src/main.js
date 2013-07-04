@@ -82,8 +82,8 @@ GameWorld.prototype.init = function()
     //stage.addChild( player.sprite );
 
  
-    zombies = new ZombieLayer();
-    level.addChild(zombies);
+    level.zombies = new ZombieLayer();
+    level.addChild( level.zombies );
     stage.addChild( labelScore ); 
 
     var inputManager = new InputManager();
@@ -91,7 +91,7 @@ GameWorld.prototype.init = function()
 
     function update() {
         //player.update(level);
-        zombies.y -= 1;
+
         stage.update();
         level.update();
     }

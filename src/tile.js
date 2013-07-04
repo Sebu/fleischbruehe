@@ -318,6 +318,16 @@ Level.prototype.update = function()
         this.player.x = newPos;
     }
 
+    this.zombies.update();
+
+
+   
+    if(-TILE_HEIGHT * (this.currentLayer-4) < this.zombies.y) 
+    {
+        console.log("GAME OVER!1!");
+    }
+
+
 };
 
 Level.prototype.getLayerForPoint = function ( x, y )
@@ -338,11 +348,17 @@ function ZombieLayer() {
     this.initialize('res/block.png');
     this.scaleX = 14;
     this.x = 0;
-    this.y = 960;
+    this.y = -200;
 } 
 
 
 ZombieLayer.prototype = new createjs.Bitmap();
+
+
+ZombieLayer.prototype.update = function() 
+{
+    this.y -= 1;
+}
 
 
 
