@@ -35,6 +35,9 @@ function preloadAssetsAndStart() {
         { id: "player_walk2", src: "res/character_walk2.png" },
 
         { id: "player_jump", src: "res/character_jump.png" },
+        { id: "player_fall", src: "res/character_fall.png" },
+        { id: "player_climb0", src: "res/character_fall.png" },
+        { id: "player_climb1", src: "res/character_fall.png" },
     ] );
 }
 
