@@ -40,8 +40,14 @@ function preloadAssetsAndStart() {
 
 
 function startMainLoop() {
-    var world = new GameWorld();
+     var world = new GameWorld();
     initSound();
+
+    document.getElementById('playButton').addEventListener("click", function handleChange(event) {
+                window.location.reload();
+
+                });
+
 }
 
 

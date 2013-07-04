@@ -375,6 +375,11 @@ Level.prototype.gameOver = function()
     labelGameOver.textBaseline = "alphabetic";
     stage.addChild(labelGameOver);
     this.zombies.isRunning = false;
+
+    document.getElementById('playButton').style.display = 'block';
+
+
+
 }
 
 Level.prototype.getLayerForPoint = function ( x, y )
