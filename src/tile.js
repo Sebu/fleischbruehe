@@ -98,7 +98,7 @@ Layer.prototype.addPlayer = function ( player, x ) {
     player.x = x - this.x;
     this.addChild( player );
     this.player = player;
-    this.parent.setChildIndex( this, levelGlobal.getChildIndex(levelGlobal.zombies) - 1);
+    this.parent.setChildIndex( this, levelGlobal.getChildIndex(levelGlobal.zombies) - 1 );
 
 }
 
@@ -236,7 +236,7 @@ Level.prototype.initialize = function()
     var spriteSheet = new createjs.SpriteSheet( data );
     this.player = new createjs.BitmapAnimation( spriteSheet );
     this.player.gotoAndPlay( "stand" );
-    this.playerLayer = 2;
+    this.playerLayer = 3;
     while ( this.currentLayer < 6 ) {
         this.moveUp( true );
     }
@@ -331,6 +331,7 @@ Level.prototype.moveUp = function ( force ) {
             layer = new Layer( pattern[i] );
             this.layers.push( layer );
             this.addChild( layer );
+            this.setChildIndex( layer, 0 );
             layer.y = -TILE_HEIGHT * this.layers.length;
         }
     }
@@ -449,9 +450,18 @@ Level.prototype.update = function () {
     }
 
     this.zombies.update();
-    if(-TILE_HEIGHT * (this.currentLayer-3.3) > this.zombies.y) 
+    if(-TILE_HEIGHT * (this.currentLayer-2.3) > this.zombies.y) 
     {
         this.gameOver();
+    }
+    else if ( -TILE_HEIGHT * ( this.currentLayer - 4.3 ) > this.zombies.y ) {
+        this.zombies.speed = ZombieLayerSpeeds.SLOW;
+    }
+    else if ( -TILE_HEIGHT * ( this.currentLayer - 10.3 ) > this.zombies.y ) {
+        this.zombies.speed = ZombieLayerSpeeds.NORMAL;
+    }
+    else if ( -TILE_HEIGHT * ( this.currentLayer - 15.3 ) > this.zombies.y ) {
+        this.zombies.speed = ZombieLayerSpeeds.FAST;
     }
 
     var bla = Math.floor(Math.abs(this.zombies.y / TILE_HEIGHT));
@@ -481,49 +491,51 @@ Level.prototype.moveLayer = function(layerNo, offset)
 
 Level.prototype.moveLayerStart = function()
 {
-    createjs.Tween.removeTweens(this);
+    if (
+        this.playerState == PlayerStates.IDLE ||
+        this.playerState == PlayerStates.LEFT ||
+        this.playerState == PlayerStates.RIGHT ) {
+        createjs.Tween.removeTweens( this );
+    }
 }
 
 Level.prototype.moveLayerEnded = function(layerNo, deltaX, deltaTime)
 {
+    if (
+        this.playerState == PlayerStates.IDLE ||
+        this.playerState == PlayerStates.LEFT ||
+        this.playerState == PlayerStates.RIGHT ) {
 
-  
-   var lvl = this;
-   var l = this.layers[layerNo];
+        var lvl = this;
+        var l = this.layers[layerNo];
 
-   var speed = Math.abs(deltaX) / deltaTime;
-   var dir = 1;
-   if(deltaX < 0)
-        dir = -1;
+        var speed = Math.abs( deltaX ) / deltaTime;
+        var dir = 1;
+        if ( deltaX < 0 )
+            dir = -1;
 
-   this.twe = dir*speed*30;
+        this.twe = dir * speed * 30;
 
- 
 
-    function onComplete()
-    {
-        l.snapToGrid();
-    }
 
-   if (speed > 0.5)
-   {
-        var that = this;
-        createjs.Tween.get( this, {override:true})
-            .to({twe: dir*6 }, 2000, createjs.Ease.quadOut)
-            .call(  onComplete )  
-            .addEventListener("change", function handleChange(event) {
-                lvl.moveLayer(layerNo, that.twe);
-                })
+        function onComplete() {
+            l.snapToGrid();
+        }
+
+        if ( speed > 0.5 ) {
+            var that = this;
+            createjs.Tween.get( this, { override: true } )
+                .to( { twe: dir * 6 }, 2000, createjs.Ease.quadOut )
+                .call( onComplete )
+                .addEventListener( "change", function handleChange( event ) {
+                    lvl.moveLayer( layerNo, that.twe );
+                } )
             ;
 
-   } else {
-        onComplete();
-   }
-
-
-
-
-
+        } else {
+            onComplete();
+        }
+    }
 }
 
 Level.prototype.gameOver = function()
@@ -547,6 +559,12 @@ Level.prototype.canPlayerMoveTo = function(x,y)
 
     return this.layers[layerNo].canPlayerMoveTo(x, y);
 };
+
+var ZombieLayerSpeeds = {
+    SLOW : 0.5,
+    NORMAL : 1.5,
+    FAST : 5.5,
+}
 
 function ZombieLayer() {
 
@@ -573,12 +591,12 @@ function ZombieLayer() {
 } 
 
 
-ZombieLayer.prototype = new createjs.BitmapAnimation();
-ZombieLayer.prototype.update = function() 
-{
-    if(this.isRunning)
-        this.y -= this.speed;
-}
+    ZombieLayer.prototype = new createjs.BitmapAnimation();
+    ZombieLayer.prototype.update = function() 
+    {
+        if(this.isRunning)
+            this.y -= this.speed;
+    }
 
 
 
