@@ -496,7 +496,7 @@ Level.prototype.moveLayerStart = function()
         this.playerState == PlayerStates.IDLE ||
         this.playerState == PlayerStates.LEFT ||
         this.playerState == PlayerStates.RIGHT ) {
-        createjs.Tween.removeTweens( this );
+        if ( this.tweener ) createjs.Tween.removeTweens( this.tweener );
     }
 }
 
@@ -515,7 +515,7 @@ Level.prototype.moveLayerEnded = function(layerNo, deltaX, deltaTime)
         if ( deltaX < 0 )
             dir = -1;
 
-        this.twe = dir * speed * 30;
+        this.tweener = { twe : dir * speed * 30 };
 
 
 
@@ -525,11 +525,11 @@ Level.prototype.moveLayerEnded = function(layerNo, deltaX, deltaTime)
 
         if ( speed > 0.5 ) {
             var that = this;
-            createjs.Tween.get( this, { override: true } )
+            createjs.Tween.get( this.tweener, { override: true } )
                 .to( { twe: dir * 6 }, 2000, createjs.Ease.quadOut )
                 .call( onComplete )
                 .addEventListener( "change", function handleChange( event ) {
-                    lvl.moveLayer( layerNo, that.twe );
+                    lvl.moveLayer( layerNo, that.tweener.twe );
                 } )
             ;
 
