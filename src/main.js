@@ -2,10 +2,12 @@
     preloadAssetsAndStart();
     initSound();
 
+
+    topPos = 0;
     var that = this;
     this.splashStatus = $('#splash-status');
 
-    $('body').delay('1000').animate({ scrollTop: '0px' }, 'slow');
+    //$('body').delay('1000').animate({ scrollTop: '0px' }, 'slow');
 
 
     window.onresize = function(e) { resize(e) };
@@ -18,9 +20,7 @@
     .addClass('button right')
     .click( function() {
         createjs.Sound.play("princes");
-        $('#mainMenu').fadeOut(400, function() {
-              world.level.isRunning = true;
-        });
+  
       
     })
     .text('PLAY')
@@ -44,15 +44,19 @@
     });
 
     $('#story3').click( function() {
-        scrollStory();
+        // scrollStory();
+        $('#mainMenu').fadeOut(400, function() {
+              world.level.isRunning = true;
+        });
     });
 
     resize();
 }
 
 function scrollStory() {
-    var top = $('#mainMenu').offset().top;
-    $("#mainMenu").animate({top: top-window.innerHeight},500);
+    topPos -= window.innerHeight;
+
+    $("#mainMenu").animate({top: topPos});
 }
 
 
@@ -103,7 +107,12 @@ function preloadAssetsAndStart() {
 
         { id: "zombie0", src: "res/zombiewave1.png" },
         { id: "zombie1", src: "res/zombiewave2.png" },
-        { id: "zombie2", src: "res/zombiewave3.png" }
+        { id: "zombie2", src: "res/zombiewave3.png" },
+
+        { id: "story0", src: "res/startscreen.png" },
+        { id: "story1", src: "res/story1.png" },
+        { id: "story2", src: "res/story2.png" },
+        { id: "story3", src: "res/story3.png" }
 
     ] );
 }
@@ -121,10 +130,11 @@ function preloadAssetsAndStart() {
   if(aspect>1.2)
     aspectedWidth = width;
 
-
+  
   canvas.css('margin-left', '' + (-aspectedWidth/2) + 'px');
   canvas.width(aspectedWidth);
   canvas.height(height);
+  canvas.css('left', '50%');
 
 };
 
@@ -137,9 +147,9 @@ function initSound() {
                if (!createjs.Sound.initializeDefaultPlugins()) {return;}
                 var audioPath = "res/";
                 var manifest = [
-                {id:"oh_my_god", src:audioPath+"princes_oh_my_god.mp3"},
-                    {id:"do_do_do", src:audioPath+"princes-do-do-do.mp3"},
-                    {id:"scream", src:audioPath+"princes_scream.mp3"}
+                {id:"story1", src:audioPath+"princes_oh_my_god.mp3"},
+                    {id:"story2", src:audioPath+"princes-do-do-do.mp3"},
+                    {id:"story3", src:audioPath+"princes_scream.mp3"}
                 ];
                 createjs.Sound.registerManifest(manifest);
 
@@ -174,24 +184,52 @@ GameWorld.prototype.init = function()
     level.isRunning  = false;
     stage.addChild( level );
 
+    this.tutorialStep = 0;
  
-    //stage.addChild( player.sprite );
+    this.storyCurrent = new  createjs.Bitmap(assetLoader.getResult('story0'));
+   
 
- 
     level.zombies = new ZombieLayer();
 
     level.addChild( level.zombies );
-    stage.addChild( labelScore ); 
+     stage.addChild( labelScore ); 
+     stage.addChild(this.storyCurrent);
 
     var inputManager = new InputManager();
     inputManager.init( stage, this );
 
     function update() {
-        //player.update(level);
             stage.update();
             level.update();
-
     }
+}
+
+GameWorld.prototype.updateTutorialStep = function()
+ {
+    this.tutorialStep++;
+    if(this.tutorialStep<4)
+    {
+        createjs.Sound.play('story' + this.tutorialStep );
+        this.storyNext = new createjs.Bitmap(assetLoader.getResult('story' + this.tutorialStep ));
+        this.storyNext.y = 960;
+        stage.addChild(this.storyNext);
+        createjs.Tween.get( this.storyCurrent ).to( { y: -960 }, 400 );
+        var that = this;
+        createjs.Tween.get( this.storyNext ).to( { y: 0 }, 400 ).call( function() {
+            stage.removeChild(that.storyCurrent);
+            that.storyCurrent = that.storyNext;
+            that.storyCurrent.y = 0;
+        }); 
+    }
+    if(this.tutorialStep==4) {
+         var that = this;
+        createjs.Tween.get( this.storyCurrent ).to( { alpha: 0 }, 400 ).call( function() {
+            stage.removeChild(that.storyCurrent);
+            that.level.isRunning = true;
+        }); 
+    }
+
+
 }
 
 

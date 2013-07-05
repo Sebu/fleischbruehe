@@ -26,6 +26,7 @@ InputManager.prototype.handleTouchStart = function ( event ) {
         startTime: new Date().getTime()
     }
     this.world.level.moveLayerStart();
+    this.world.updateTutorialStep();
 }
 
 InputManager.prototype.handleTouchMove = function ( event ) {

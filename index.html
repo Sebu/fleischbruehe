@@ -13,22 +13,14 @@
     <canvas
         id="canvas"
         width="640"
-        height="920"
+        height="960"
         style="
             width:100%;
             height:100%;"
         >
         Your browser does not support HTML5 canvas.
     </canvas>
-            <div id='mainMenu' class='gameScreen'>
-                <img id='story0' height='100%' src='res/story0.png'/>
-                <img id='story1' height='100%' src='res/story1.png'/>
-                <img id='story2' height='100%' src='res/story2.png'/>
-                <img id='story3' height='100%'  src='res/story3.png'/>
-                <div id='splash-status'>
-
-                    <div id='playButton' class='button'>PLAY</div>
-                </div>
+            <div id='mainMenu' class='gameScreen hidden'>
             </div>
              <div id='gameOver' class='gameScreen hidden'>
                 <img width='100%' src='res/gameover_text.png'/>
@@ -40,7 +32,6 @@
 
     <script src="http://code.createjs.com/createjs-2013.05.14.min.js"></script>
     <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7/jquery.min.js"></script>
-    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery-ui.min.js"></script>
     <script src="src/patterns.js"></script>
     <script src="src/tile.js"></script>
     <script src="src/tilelib.js"></script>
