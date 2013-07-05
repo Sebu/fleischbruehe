@@ -69,23 +69,28 @@ function startMainLoop() {
      var world = new GameWorld();
     initSound();
 
-
     var that = this;
+    this.splashStatus = $('#splash-status');
+
+    $('body').delay('1000').animate({ scrollTop: '0px' }, 'slow');
+
+
     window.onresize = function(e) { resize(e) };
 
-    document.getElementById('playButton').addEventListener("click", function handleChange(event) {
+    $('#restartButton').click( function handleChange(event) {
                 window.location.reload();
+    });
 
-                });
-    this.splashStatus = $('#splash-status');
+
+
 
      $('<div>')
                 .addClass('button right')
                 .click( function() {
-                    $('#splash').hide();
+                    $('#mainMenu').hide();
                     world.level.isRunning = true;
                 })
-                .text('let\'s go >')
+                .text('PLAY')
                 .attr('value','ok')
                 .appendTo(this.splashStatus);
 
