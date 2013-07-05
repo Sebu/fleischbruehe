@@ -31,7 +31,7 @@ abbr,acronym { border:0;
 
 html,body {
   border: 0;
-  background:  rgb(123, 121, 122);  
+  background:  #000;  
   color: #000; 
   font-size: 100%;   
   width: 100%;
@@ -75,7 +75,10 @@ html,body {
 
 
 .gameScreen {
-  position: absolute;
+   z-index: 3;
+  background-color: rgba(26, 143, 228, 0.94);
+  border: 0;
+  text-shadow: 0px 0px 30px rgba(0, 0, 0, 0.6);
 }
 
 #mainMenu {
