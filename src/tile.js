@@ -450,7 +450,7 @@ Level.prototype.update = function () {
     }
 
     this.zombies.update();
-    var zombieFactor = Math.min( 10, Math.max( 1, ( this.currentLayer - 10 ) / 10 ) );
+    var zombieFactor = Math.min( 10, Math.max( 1, ( this.currentLayer - 10 ) / 50 ) );
     if ( -TILE_HEIGHT * ( this.currentLayer - 2.3 ) > this.zombies.y )
     {
         this.gameOver();
