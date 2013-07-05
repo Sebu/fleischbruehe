@@ -6,15 +6,15 @@
 		"_______ H______",
 	],
 	[// 2
-		"____H___V______",
+		"__SSH___V______",
 		"____SSSSSSS____",
 		"_____^_ SSS____",
 	],
 	[// 3
-		"_______J_ _____",
-		"_____J__ ______",
+		"__WWW__J_ _____",
+		"_____J__ ____SS",
 		"_____ ___J_____",
-		"_____J_ _______",
+		"SSS__J_ _______",
 	],
 	[// 4
 		"___ ____J______",
@@ -61,7 +61,7 @@
 
 	[// 11
 		"____________V_H",
-		"____J____B_____",
+		"__ _J____B_____",
 		"______H_____W _",
 		"_^_SSS_ __JWPW_",
 	],
@@ -108,9 +108,9 @@
 	],
 	[// 19
 		"__H___SSSS ____",
-		"__ _SSS________",
+		"__ _SSSJ_______",
 		"S__SSSSSV___H__",
-		"_____^_ SSS____",
+		"_SS__^_ SSS____",
 	],
 	[// 20
 		"_______J______V",
@@ -123,17 +123,28 @@ PATTERN_STATE = -1;
 
 function GetRandomPattern() {
     var pattern = ["__ ___H________"];
-    switch ( PATTERN_STATE ) {
-        case -1: pattern = [
+    if ( PATTERN_STATE < 0 ) {
+        pattern = [
             "__ ___H________",
             "__ _______H____",
             "__H___ ________",
             "__ ___H________",
             "__ _______H____",
-            "__H____________", ]; PATTERN_STATE = 9; break;
-        default:
-        case 0: pattern = PATTERN_LIST[ PATTERN_STATE % PATTERN_LIST.length ]; break;//PATTERN_LIST[Math.floor( Math.random() * PATTERN_LIST.length )]; break;
+            "__H____________", ];
     }
+    else if ( PATTERN_STATE < 3 ) {
+        pattern = PATTERN_LIST[ Math.floor( Math.random() * 5 ) ];
+    }
+    else if ( PATTERN_STATE < 8 ) {
+        pattern = PATTERN_LIST[5 + Math.floor( Math.random() * 10 )];
+    }
+    else if ( PATTERN_STATE < 10 ) {
+        pattern = PATTERN_LIST[15 + Math.floor( Math.random() * ( PATTERN_LIST.length - 15 ) )];
+    }
+    else {
+        pattern = PATTERN_LIST[Math.floor( Math.random() * PATTERN_LIST.length )];
+    }
+
     PATTERN_STATE++;
-    return pattern;
+    return pattern ? pattern : ["__ ___H________"];
 }
