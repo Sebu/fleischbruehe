@@ -192,8 +192,7 @@ GameWorld.prototype.init = function()
     level.zombies = new ZombieLayer();
 
     level.addChild( level.zombies );
-    level.isRunning = true;
-    stage.addChild( labelScore ); 
+     stage.addChild( labelScore ); 
      stage.addChild(this.storyCurrent);
 
     var inputManager = new InputManager();
@@ -226,7 +225,7 @@ GameWorld.prototype.updateTutorialStep = function()
          var that = this;
         createjs.Tween.get( this.storyCurrent ).to( { alpha: 0 }, 400 ).call( function() {
             stage.removeChild(that.storyCurrent);
-            that.isRunning = true;
+            that.level.isRunning = true;
         }); 
     }
 
