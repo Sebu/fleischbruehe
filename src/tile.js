@@ -1,5 +1,6 @@
 var TILE_WIDTH = 128;
 var TILE_HEIGHT = 192;
+var PLAYER_SPEED_X = 16;
 
 var Tile = function(img) {
     this.initialize(img);
