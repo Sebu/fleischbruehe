@@ -1,4 +1,34 @@
-﻿var assetLoader = new createjs.LoadQueue();
+﻿function init() {
+    preloadAssetsAndStart();
+    initSound();
+
+    var that = this;
+    this.splashStatus = $('#splash-status');
+
+    $('body').delay('1000').animate({ scrollTop: '0px' }, 'slow');
+
+
+    window.onresize = function(e) { resize(e) };
+
+    $('#restartButton').click( function handleChange(event) {
+        window.location.reload();
+    });
+
+    $('<div>')
+    .addClass('button right')
+    .click( function() {
+        $('#mainMenu').hide();
+        world.level.isRunning = true;
+    })
+    .text('PLAY')
+    .attr('value','ok')
+    .appendTo(this.splashStatus);
+
+    resize();
+}
+
+
+var assetLoader = new createjs.LoadQueue();
 function preloadAssetsAndStart() {
     assetLoader.addEventListener( "complete", startMainLoop );
     assetLoader.loadManifest( [
@@ -58,8 +88,6 @@ function preloadAssetsAndStart() {
   var aspect = height / width;
   var aspectedWidth = (height/3) * 2;
 
-  console.log(aspect);
-
   if(aspect>1.2)
     aspectedWidth = width;
 
@@ -71,35 +99,7 @@ function preloadAssetsAndStart() {
 };
 
 function startMainLoop() {
-     var world = new GameWorld();
-    initSound();
-
-    var that = this;
-    this.splashStatus = $('#splash-status');
-
-    $('body').delay('1000').animate({ scrollTop: '0px' }, 'slow');
-
-
-    window.onresize = function(e) { resize(e) };
-
-    $('#restartButton').click( function handleChange(event) {
-                window.location.reload();
-    });
-
-
-
-
-     $('<div>')
-                .addClass('button right')
-                .click( function() {
-                    $('#mainMenu').hide();
-                    world.level.isRunning = true;
-                })
-                .text('PLAY')
-                .attr('value','ok')
-                .appendTo(this.splashStatus);
-
-    resize();
+      world = new GameWorld();
 }
 
 

@@ -74,6 +74,10 @@ html,body {
 }
 
 
+.gameScreen {
+  position: absolute;
+}
+
 #mainMenu {
   font-family: sans-serif;
   text-align: center;
