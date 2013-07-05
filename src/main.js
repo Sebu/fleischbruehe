@@ -27,7 +27,17 @@
     .attr('value','ok')
     .appendTo(this.splashStatus);
 
+
+    $('#story1').click( function() {
+        createjs.Sound.play("princes");
+        scrollStory();
+    });
+
     resize();
+}
+
+function scrollStory() {
+    // $("#mainMenu").
 }
 
 
