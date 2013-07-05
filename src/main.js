@@ -49,8 +49,18 @@ function preloadAssetsAndStart() {
   width =  window.innerWidth,
   height =  window.innerHeight,
   canvas =  $('#game');
-  
-  canvas.width((height/3) * 2);
+
+  var aspect = height / width;
+  var aspectedWidth = (height/3) * 2;
+
+  console.log(aspect);
+
+  if(aspect>1.2)
+    aspectedWidth = width;
+
+
+  canvas.css('margin-left', '' + (-aspectedWidth/2) + 'px');
+  canvas.width(aspectedWidth);
   canvas.height(height);
 
 };
