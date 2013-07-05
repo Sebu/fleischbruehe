@@ -112,7 +112,10 @@ function preloadAssetsAndStart() {
         { id: "story0", src: "res/startscreen.png" },
         { id: "story1", src: "res/story1.png" },
         { id: "story2", src: "res/story2.png" },
-        { id: "story3", src: "res/story3.png" }
+        { id: "story3", src: "res/story3.png" },
+
+        { id: "gameOverText", src: "res/gameover_text.png" },
+        { id: "gameOverFace", src: "res/gameover_face.png" }
 
     ] );
 }
@@ -206,6 +209,8 @@ GameWorld.prototype.init = function()
 
 GameWorld.prototype.updateTutorialStep = function()
  {
+    if(this.isAnimating) return;
+
     this.tutorialStep++;
     if(this.tutorialStep<4)
     {
@@ -215,10 +220,12 @@ GameWorld.prototype.updateTutorialStep = function()
         stage.addChild(this.storyNext);
         createjs.Tween.get( this.storyCurrent ).to( { y: -960 }, 400 );
         var that = this;
+        this.isAnimating = true;
         createjs.Tween.get( this.storyNext ).to( { y: 0 }, 400 ).call( function() {
             stage.removeChild(that.storyCurrent);
             that.storyCurrent = that.storyNext;
             that.storyCurrent.y = 0;
+            that.isAnimating = false;
         }); 
     }
     if(this.tutorialStep==4) {
@@ -226,7 +233,13 @@ GameWorld.prototype.updateTutorialStep = function()
         createjs.Tween.get( this.storyCurrent ).to( { alpha: 0 }, 400 ).call( function() {
             stage.removeChild(that.storyCurrent);
             that.level.isRunning = true;
+            that.tutorialStep++;
         }); 
+    }
+
+    if(this.tutorialStep>4 && !this.level.isRunning) {
+
+        window.location.reload();
     }
 
 

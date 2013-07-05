@@ -450,6 +450,7 @@ Level.prototype.update = function () {
     }
 
     this.zombies.update();
+
     var zombieFactor = Math.min( 10, Math.max( 1, ( this.currentLayer - 10 ) / 50 ) );
     if ( -TILE_HEIGHT * ( this.currentLayer - 2.3 ) > this.zombies.y )
     {
@@ -469,7 +470,6 @@ Level.prototype.update = function () {
     var layerToRemove = this.layers[bla-2];
     if(layerToRemove && layerToRemove.parent)
     {
-            console.log("removing", bla);
             this.removeChild( layerToRemove ); 
     }
 
@@ -544,7 +544,22 @@ Level.prototype.gameOver = function()
     this.isRunning = false;
     this.zombies.isRunning = false;
 
-    $('#gameOver').fadeIn();
+    var gameOverText = new createjs.Bitmap(assetLoader.getResult('gameOverText'));
+    gameOverText.alpha = 0;
+    gameOverText.y = 30;
+    stage.addChild(gameOverText);
+    createjs.Tween.get( gameOverText ).to( { alpha: 1 }, 400 ).call( function() {
+    }); 
+
+    var gameOverFace = new createjs.Bitmap(assetLoader.getResult('gameOverFace'));
+    gameOverFace.y = 500;
+    gameOverFace.x = 163;
+    gameOverFace.alpha = 0;
+    stage.addChild(gameOverFace);
+    createjs.Tween.get( gameOverFace ).to( { alpha: 1, y: 400 }, 600 ).call( function() {
+    }); 
+
+
 }
 
 Level.prototype.getLayerForPoint = function ( x, y )
