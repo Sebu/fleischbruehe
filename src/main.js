@@ -28,8 +28,22 @@
     .appendTo(this.splashStatus);
 
 
+    $('#story0').click( function() {
+        createjs.Sound.play("oh_my_god");
+        scrollStory();
+    });
+
     $('#story1').click( function() {
-        createjs.Sound.play("princes");
+        createjs.Sound.play("do_do_do");
+        scrollStory();
+    });
+
+    $('#story2').click( function() {
+        createjs.Sound.play("scream");
+        scrollStory();
+    });
+
+    $('#story3').click( function() {
         scrollStory();
     });
 
@@ -37,7 +51,8 @@
 }
 
 function scrollStory() {
-    // $("#mainMenu").
+    var top = $('#mainMenu').offset().top;
+    $("#mainMenu").animate({top: top-window.innerHeight},500);
 }
 
 
@@ -122,7 +137,9 @@ function initSound() {
                if (!createjs.Sound.initializeDefaultPlugins()) {return;}
                 var audioPath = "res/";
                 var manifest = [
-                    {id:"princes", src:audioPath+"princes-do-do-do.mp3"}
+                {id:"oh_my_god", src:audioPath+"princes_oh_my_god.mp3"},
+                    {id:"do_do_do", src:audioPath+"princes-do-do-do.mp3"},
+                    {id:"scream", src:audioPath+"princes_scream.mp3"}
                 ];
                 createjs.Sound.registerManifest(manifest);
 
