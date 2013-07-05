@@ -1,7 +1,7 @@
 ﻿(function(){
 
     var floor = {
-        images: ["tile_floor0", "tile_floor1", "tile_floor2", "tile_floor3", "tile_floor4", "tile_floor5", "tile_floor6"],
+        images: ["tile_floor0", "tile_floor1", "tile_floor2", "tile_floor3", "tile_floor4", "tile_floor5"],
         physic: function ( x ) { return 10 },
         canEnter : Enter.LEFT | Enter.RIGHT 
     }
