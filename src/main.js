@@ -39,7 +39,12 @@ function preloadAssetsAndStart() {
         { id: "player_climb0", src: "res/character_climb.png" },
         { id: "player_climb1", src: "res/character_climb2.png" },
 
-        { id: "alert", src: "res/alert.png" }
+        { id: "alert", src: "res/alert.png" },
+
+        { id: "zombie0", src: "res/zombiewave1.png" },
+        { id: "zombie1", src: "res/zombiewave2.png" },
+        { id: "zombie2", src: "res/zombiewave3.png" }
+
     ] );
 }
 

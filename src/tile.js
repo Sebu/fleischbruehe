@@ -469,7 +469,12 @@ Level.prototype.requestPattern = function () {
 
 Level.prototype.moveLayer = function(layerNo, offset)
 {
+    if (
+        this.playerState == PlayerStates.IDLE ||
+        this.playerState == PlayerStates.LEFT ||
+        this.playerState == PlayerStates.RIGHT ) {
         this.layers[layerNo].moveByOffset( offset );
+    }
 };
 
 
@@ -550,18 +555,31 @@ Level.prototype.canPlayerMoveTo = function(x,y)
 };
 
 function ZombieLayer() {
-    this.initialize('res/zombiewave1.png');
-    // this.scaleX = 14;
+
+    var images = [
+            assetLoader.getResult( "zombie0" ),
+            assetLoader.getResult( "zombie1" ),
+            assetLoader.getResult( "zombie2" ),
+    ]
+
+    var data = {
+        images: images,
+        frames: { width: 640, height: 392, count: 3 },
+        animations: {
+            normal: [0, 2, "normal", 60],
+        }
+    }
+    var spriteSheet = new createjs.SpriteSheet( data );
+    this.initialize( spriteSheet );
     this.x = 0;
     this.y = -300;
     this.speed = .5;
     this.isRunning = true;
+    this.gotoAndPlay( "normal" );
 } 
 
 
-ZombieLayer.prototype = new createjs.Bitmap();
-
-
+ZombieLayer.prototype = new createjs.BitmapAnimation();
 ZombieLayer.prototype.update = function() 
 {
     if(this.isRunning)
