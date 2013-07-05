@@ -20,13 +20,10 @@ body {
         border-radius: 3px;
          z-index: 2; 
         background-color: rgba(26, 143, 228, 0.24);
-         top: 400px; 
-         left: 330px;
          align: center;
          position: absolute; 
          padding: 10px; 
     cursor: pointer;
-    display: none;
 }
 
 
@@ -39,4 +36,23 @@ body {
     box-shadow: inset 0 0 10px #070707, inset 0 0 5px #070707, 0 1px 0 #4B4947;
     -moz-box-shadow: inset 0 0 10px #070707, inset 0 0 5px #070707, 0 1px 0 #4B4947;
     -webkit-box-shadow: inset 0 0 10px #070707, inset 0 0 5px #070707, 0 1px 0 #4B4947;
+}
+
+
+#splash {
+  font-family: sans-serif;
+  text-align: center;
+  position: absolute;
+  color: #FFF;
+  top: 50%;
+  left: 50%;
+  font-size: 1.1em;
+  min-height: 10em; 
+  width: 30em;
+  margin-top: -10em;
+  margin-left: -15em;
+  z-index: 3;
+  background-color: rgba(26, 143, 228, 0.94);
+  border: 0;
+  text-shadow: 0px 0px 30px rgba(0, 0, 0, 0.6);
 }

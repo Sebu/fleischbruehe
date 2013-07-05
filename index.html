@@ -3,9 +3,11 @@
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="utf-8" />
-    <title>easel.js test</title>
+    <title>Princess Candy & her Zombie Friends??</title>
     <link rel="stylesheet" type="text/css" href="src/base.css?v=1">
     <script src="http://code.createjs.com/createjs-2013.05.14.min.js"></script>
+    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7/jquery.min.js"></script>
+    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery-ui.min.js"></script>
     <script src="src/Player.js"></script>
     <script src="src/patterns.js"></script>
     <script src="src/tile.js"></script>
@@ -21,6 +23,8 @@
 </head>
 <body
     onload="init();">
+
+    <div id=game>
     <canvas
         id="canvas"
         width="640"
@@ -31,6 +35,14 @@
         >
         Your browser does not support HTML5 canvas.
     </canvas>
+            <div id='splash'>
+                <h1>Princess Candy & her Zombie Friends??</h1>
+                <div id='splash-status'><div id='playButton' class='button'>PLAY</div></div>
+
+            </div>
     <div id='playButton' hidden='true' class='button'>PLAY</div>
+    <div id='playButton' hidden='true' class='button'>PLAY</div>
+    <div id='playButton' hidden='true' class='button'>PLAY</div>  
+    </div>  
 </body>
 </html>

@@ -44,15 +44,42 @@ function preloadAssetsAndStart() {
 }
 
 
+ resize = function() {
+  var 
+  width =  window.innerWidth,
+  height =  window.innerHeight,
+  canvas =  $('#game');
+  
+  canvas.width((height/3) * 2);
+  canvas.height(height);
+
+};
+
 function startMainLoop() {
      var world = new GameWorld();
     initSound();
+
+
+    var that = this;
+    window.onresize = function(e) { resize(e) };
 
     document.getElementById('playButton').addEventListener("click", function handleChange(event) {
                 window.location.reload();
 
                 });
+    this.splashStatus = $('#splash-status');
 
+     $('<div>')
+                .addClass('button right')
+                .click( function() {
+                    $('#splash').hide();
+                    world.level.isRunning = true;
+                })
+                .text('let\'s go >')
+                .attr('value','ok')
+                .appendTo(this.splashStatus);
+
+    resize();
 }
 
 
@@ -80,6 +107,7 @@ GameWorld.prototype.contructor = GameWorld;
 
 GameWorld.prototype.init = function() 
 {
+
     stage = this.stage = new createjs.Stage( "canvas" );
 
     createjs.Ticker.addEventListener( "tick", update );
@@ -94,7 +122,7 @@ GameWorld.prototype.init = function()
 
     //player = this.player = new Player(WORLD_CENTER.x, WORLD_CENTER.y);
     var level = this.level = new Level();
-
+    level.isRunning  = false;
     stage.addChild( level );
 
  
@@ -111,9 +139,9 @@ GameWorld.prototype.init = function()
 
     function update() {
         //player.update(level);
+            stage.update();
+            level.update();
 
-        stage.update();
-        level.update();
     }
 }
 
