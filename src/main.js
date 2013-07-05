@@ -110,8 +110,12 @@ function startMainLoop() {
 
 
 function initSound() {
-// if initializeDefaultPlugins returns false, we cannot play sound in this browser
-createjs.Sound.registerSound("res/princes-do-do-do.mp3", "princes");
+               if (!createjs.Sound.initializeDefaultPlugins()) {return;}
+                var audioPath = "res/";
+                var manifest = [
+                    {id:"princes", src:audioPath+"princes-do-do-do.mp3"}
+                ];
+                createjs.Sound.registerManifest(manifest);
 
 }
  
