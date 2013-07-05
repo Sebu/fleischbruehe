@@ -17,8 +17,10 @@
     $('<div>')
     .addClass('button right')
     .click( function() {
-        $('#mainMenu').hide();
-        world.level.isRunning = true;
+        $('#mainMenu').fadeOut(400, function() {
+              world.level.isRunning = true;
+        });
+      
     })
     .text('PLAY')
     .attr('value','ok')

@@ -529,16 +529,9 @@ Level.prototype.moveLayerEnded = function(layerNo, deltaX, deltaTime)
 Level.prototype.gameOver = function()
 {
     this.isRunning = false;
-    var labelGameOver = new createjs.Bitmap("res/gameover.png");
-    labelGameOver.x = 0;
-    labelGameOver.y =  0;
-    stage.addChild(labelGameOver);
     this.zombies.isRunning = false;
 
-    document.getElementById('playButton').style.display = 'block';
-
-
-
+    $('#gameOver').fadeIn();
 }
 
 Level.prototype.getLayerForPoint = function ( x, y )
