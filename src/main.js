@@ -146,13 +146,20 @@ function startMainLoop() {
 }
 
 
+
+
 function initSound() {
                if (!createjs.Sound.initializeDefaultPlugins()) {return;}
                 var audioPath = "res/";
                 var manifest = [
                 {id:"story1", src:audioPath+"princes_oh_my_god.mp3"},
                     {id:"story2", src:audioPath+"princes-do-do-do.mp3"},
-                    {id:"story3", src:audioPath+"princes_scream.mp3"}
+                    {id:"story3", src:audioPath+"princes_scream.mp3"},
+                    {id:"bounce", src:audioPath+"bounce3.mp3"},
+                    {id:"fall", src:audioPath+"bounce4.mp3"},
+                    {id:"ladder", src:audioPath+"stairs_up.mp3"},
+                    {id:"stairs_up", src:audioPath+"stairs_up.mp3"},
+                    {id:"stairs_down", src:audioPath+"stairs_down.mp3"}
                 ];
                 createjs.Sound.registerManifest(manifest);
 

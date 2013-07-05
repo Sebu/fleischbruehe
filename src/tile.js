@@ -275,6 +275,7 @@ Level.prototype.moveUp = function ( force ) {
             this.player.y = TILE_HEIGHT;
             createjs.Tween.get( this.player ).to( { y: 0 }, 1000 );
             this.player.gotoAndPlay( "climb" );
+            createjs.Sound.play("ladder");
         } else if ( playerTile == "J" && upperTile == " " && ( this.playerState == PlayerStates.IDLE || this.playerState == PlayerStates.LEFT || this.playerState == PlayerStates.RIGHT ) ) {
             this.currentLayer++;
             playerLayer.removePlayer( this.player );
@@ -284,7 +285,9 @@ Level.prototype.moveUp = function ( force ) {
             this.player.y = TILE_HEIGHT;
             createjs.Tween.get( this.player ).to( { y: 0 }, 300 );
             this.player.gotoAndPlay( "jump" );
+            createjs.Sound.play("bounce");
         } else if ( playerTile == "^" ) {
+ 
             var foundDoor = false;
             var layerOffset = 0;
             while ( !foundDoor ) {
@@ -302,7 +305,9 @@ Level.prototype.moveUp = function ( force ) {
             playerLayer.removePlayer( this.player );
             upperLayer.addPlayer( this.player, i + upperLayer.x );
             this.playerLayer = this.playerLayer + layerOffset;
+           createjs.Sound.play("stairs_up");
         } else if ( playerTile == "P" ) {
+
             var foundDoor = false;
             var layerOffset = 0;
             while ( !foundDoor ) {
@@ -320,6 +325,7 @@ Level.prototype.moveUp = function ( force ) {
             playerLayer.removePlayer( this.player );
             upperLayer.addPlayer( this.player, i + upperLayer.x );
             this.playerLayer = this.playerLayer + layerOffset;
+            createjs.Sound.play("stairs_up");
         }
     }
     if ( this.currentLayer > this.layers.length - 5 ) {
@@ -356,6 +362,7 @@ Level.prototype.moveDown = function () {
         this.player.y = -TILE_HEIGHT;
         createjs.Tween.get( this.player ).to( { y: 0 }, 1000 );
         this.player.gotoAndPlay( "fall" );
+        createjs.Sound.play("fall");
     } else if ( playerTile == "V" ) {
         var foundDoor = false;
         var layerOffset = 0;
@@ -374,6 +381,7 @@ Level.prototype.moveDown = function () {
         playerLayer.removePlayer( this.player );
         lowerLayer.addPlayer( this.player, i + lowerLayer.x );
         this.playerLayer = this.playerLayer + layerOffset;
+        createjs.Sound.play("stairs_down");
     } else if ( playerTile == "B" ) {
         var foundDoor = false;
         var layerOffset = 0;
@@ -392,13 +400,13 @@ Level.prototype.moveDown = function () {
         playerLayer.removePlayer( this.player );
         lowerLayer.addPlayer( this.player, i + lowerLayer.x );
         this.playerLayer = this.playerLayer + layerOffset;
+        createjs.Sound.play("stairs_down");
     }
 
     createjs.Tween.get( this, { override: true } ).to( { y: this.currentLayer * TILE_HEIGHT }, 500, createjs.Ease.quadOut );
 }
 
 Level.prototype.update = function () {
-
     if(!this.isRunning) return;
 
     var playerX = this.layers[this.playerLayer].getPlayerX( this.player );
