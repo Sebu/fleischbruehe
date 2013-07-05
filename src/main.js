@@ -111,7 +111,6 @@ function startMainLoop() {
 
 function initSound() {
 // if initializeDefaultPlugins returns false, we cannot play sound in this browser
-createjs.Sound.registerPlugins([createjs.HTMLAudioPlugin]);
 createjs.Sound.registerSound("res/princes-do-do-do.mp3", "princes");
 
 }
