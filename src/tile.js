@@ -450,18 +450,19 @@ Level.prototype.update = function () {
     }
 
     this.zombies.update();
-    if(-TILE_HEIGHT * (this.currentLayer-2.3) > this.zombies.y) 
+    var zombieFactor = Math.min( 10, Math.max( 1, ( this.currentLayer - 10 ) / 10 ) );
+    if ( -TILE_HEIGHT * ( this.currentLayer - 2.3 ) > this.zombies.y )
     {
         this.gameOver();
     }
     else if ( -TILE_HEIGHT * ( this.currentLayer - 4.3 ) > this.zombies.y ) {
-        this.zombies.speed = ZombieLayerSpeeds.SLOW;
+        this.zombies.speed = ZombieLayerSpeeds.SLOW * zombieFactor;
     }
     else if ( -TILE_HEIGHT * ( this.currentLayer - 10.3 ) > this.zombies.y ) {
-        this.zombies.speed = ZombieLayerSpeeds.NORMAL;
+        this.zombies.speed = ZombieLayerSpeeds.NORMAL * zombieFactor;
     }
     else if ( -TILE_HEIGHT * ( this.currentLayer - 15.3 ) > this.zombies.y ) {
-        this.zombies.speed = ZombieLayerSpeeds.FAST;
+        this.zombies.speed = ZombieLayerSpeeds.FAST * zombieFactor;
     }
 
     var bla = Math.floor(Math.abs(this.zombies.y / TILE_HEIGHT));
