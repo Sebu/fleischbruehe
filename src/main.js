@@ -158,8 +158,8 @@ function initSound() {
                     {id:"bounce", src:audioPath+"bounce3.mp3"},
                     {id:"fall", src:audioPath+"bounce4.mp3"},
                     {id:"ladder", src:audioPath+"stairs_up.mp3"},
-                    {id:"stairs_up", src:audioPath+"stairs_up.mp3"},
-                    {id:"stairs_down", src:audioPath+"stairs_down.mp3"}
+                    {id:"stairs_up", src:audioPath+"door_up.mp3"},
+                    {id:"stairs_down", src:audioPath+"door_down.mp3"}
                 ];
                 createjs.Sound.registerManifest(manifest);
 
