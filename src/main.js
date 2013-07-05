@@ -48,6 +48,9 @@ function preloadAssetsAndStart() {
         { id: "tile_floor1", src: "res/floortile2.png" },
         { id: "tile_floor2", src: "res/floortile3.png" },
         { id: "tile_floor3", src: "res/floortile4.png" },
+        { id: "tile_floor4", src: "res/floortile5.png" },
+        { id: "tile_floor5", src: "res/floortile6.png" },
+        { id: "tile_floor6", src: "res/floortile7.png" },
 
         { id: "tile_hole", src: "res/hole2.png" },
         { id: "tile_ladder", src: "res/ladder.png" },
